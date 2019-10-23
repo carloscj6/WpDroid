@@ -9,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.components.PostsAdapter
+import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
@@ -29,7 +31,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     AnkoLogger {
 
-
+    private val wpDroidAdapter = WpDroidAdapter()
     private var toggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +54,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle!!)
         toggle?.syncState()
         nav_view.setNavigationItemSelectedListener(this)
-        getPosts()
+        instantiateRecyclerView()
+        getPosts(1)
 
     }
 
@@ -73,13 +76,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun getPosts() {
-        val wpDroidAdapter = WpDroidAdapter()
+    private fun instantiateRecyclerView(){
+
         wpDroidAdapter.register(ItemViewBlog())
+        val linearLayoutManager= LinearLayoutManager(this@MainActivity)
+        recyclerViewPosts.apply {
+            adapter = wpDroidAdapter
+            layoutManager = linearLayoutManager
+            hasFixedSize()
+            addOnScrollListener(object :RecyclerViewPagination(linearLayoutManager){
+                override fun onLoadMore(
+                    page: Long,
+                    totalItemsCount: Int,
+                    view: RecyclerView
+                ) {
+                    getPosts(page)
+                }
+            })
+        }
+
+    }
+
+    private fun getPosts(page:Long) {
+
         val postsAdapter = PostsAdapter()
         val wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
-        val call = wpDataService?.getWpPosts()
+        val call = wpDataService?.getWpPosts(30,page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
 
@@ -90,15 +113,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 response: Response<List<PostResponse>>
             ) {
                 if (response.body()?.size!! > 0) {
-                    recyclerViewPosts.apply {
-                        adapter = wpDroidAdapter
-                        layoutManager = LinearLayoutManager(this@MainActivity)
-                        hasFixedSize()
-                    }
-
                     linearLayoutOops.visibility = View.GONE
                     recyclerViewPosts.visibility = View.VISIBLE
-                    wpDroidAdapter.addNewItems(response.body()!!)
+                    wpDroidAdapter.addItems(response.body()!!,false)
+
                 } else textViewOops.text = response.errorBody()?.string()
 
             }

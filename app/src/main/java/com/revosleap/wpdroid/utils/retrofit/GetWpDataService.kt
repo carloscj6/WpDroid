@@ -5,6 +5,7 @@ import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GetWpDataService {
     @GET("posts/{id}")
@@ -14,5 +15,5 @@ interface GetWpDataService {
     fun getWpMedia(@Path("id") mediaId: Long): Call<MediaResponse>
 
     @GET("posts/")
-    fun getWpPosts():Call<List<PostResponse>>
+    fun getWpPosts(@Query("per_page")postCount:Int,@Query("page")page:Long):Call<List<PostResponse>>
 }
