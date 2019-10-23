@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
+import com.revosleap.wpdroid.utils.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import com.squareup.picasso.Picasso
@@ -54,7 +55,8 @@ class ScrollingActivity : AppCompatActivity() {
     private fun getPost() {
         val wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
-        val call = wpDataService?.getWpPost(195)
+        val postId= intent.getLongExtra(Utilities.BLOG_ID,0)
+        val call = wpDataService?.getWpPost(postId)
         val progDialog= indeterminateProgressDialog("Please wait...","Getting Post")
         progDialog.show()
         call?.enqueue(object : Callback<PostResponse> {

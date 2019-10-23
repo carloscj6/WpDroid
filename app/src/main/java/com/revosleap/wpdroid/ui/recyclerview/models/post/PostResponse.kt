@@ -19,13 +19,13 @@ data class PostResponse(
     @SerializedName("excerpt")
     var excerpt: Excerpt,
     @SerializedName("featured_media")
-    var featuredMedia: Int,
+    var featuredMedia: Long,
     @SerializedName("format")
     var format: String,
     @SerializedName("guid")
     var guid: Guid,
     @SerializedName("id")
-    var id: Int,
+    var id: Long,
     @SerializedName("jetpack_featured_media_url")
     var jetpackFeaturedMediaUrl: String,
     @SerializedName("jetpack_publicize_connections")

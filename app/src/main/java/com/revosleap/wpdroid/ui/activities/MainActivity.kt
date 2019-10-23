@@ -3,21 +3,33 @@ package com.revosleap.wpdroid.ui.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.ui.AppBarConfiguration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.recyclerview.components.PostsAdapter
+import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
+import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
+import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
+import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
+import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import org.jetbrains.anko.AnkoLogger
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    AnkoLogger {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
+
     private var toggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle!!)
         toggle?.syncState()
         nav_view.setNavigationItemSelectedListener(this)
+        getPosts()
 
     }
 
@@ -58,6 +71,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(menu: MenuItem): Boolean {
         return true
+    }
+
+    private fun getPosts() {
+        val wpDroidAdapter = WpDroidAdapter()
+        wpDroidAdapter.register(ItemViewBlog())
+        val postsAdapter = PostsAdapter()
+        val wpDataService =
+            RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
+        val call = wpDataService?.getWpPosts()
+        call?.enqueue(object : Callback<List<PostResponse>> {
+            override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<List<PostResponse>>,
+                response: Response<List<PostResponse>>
+            ) {
+                if (response.body()?.size!! > 0) {
+                    recyclerViewPosts.apply {
+                        adapter = wpDroidAdapter
+                        layoutManager = LinearLayoutManager(this@MainActivity)
+                        hasFixedSize()
+                    }
+
+                    linearLayoutOops.visibility = View.GONE
+                    recyclerViewPosts.visibility = View.VISIBLE
+                    wpDroidAdapter.addNewItems(response.body()!!)
+                } else textViewOops.text = response.errorBody()?.string()
+
+            }
+        })
     }
 
 }
