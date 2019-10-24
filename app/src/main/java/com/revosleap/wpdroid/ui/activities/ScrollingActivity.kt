@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.recyclerview.models.media.MediaResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.utils.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
@@ -74,13 +75,32 @@ class ScrollingActivity : AppCompatActivity() {
             override fun onResponse(call: Call<PostResponse>, response: Response<PostResponse>) {
                 val post = response.body()
                 textViewPost.setHtml(post?.content?.rendered!!, HtmlHttpImageGetter(textViewPost))
-                blogTitle.setHtml(post.title.rendered)
-                val headerImageUrl = post.jetpackFeaturedMediaUrl
-                Picasso.with(this@ScrollingActivity).load(headerImageUrl)
-                    .placeholder(R.drawable.blog_placeholder).into(imageViewHeader)
+                blogTitle.setHtml(post.title!!.rendered!!)
+                getMedia(post.featuredMedia!!)
                 progDialog.dismiss()
             }
 
         })
+    }
+
+    private fun getMedia(id:Long){
+        val wpDataService =
+                RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
+            val call = wpDataService?.getWpMedia(id)
+            call?.enqueue(object : Callback<MediaResponse> {
+                override fun onFailure(call: Call<MediaResponse>, t: Throwable) {
+
+                }
+
+                override fun onResponse(
+                    call: Call<MediaResponse>,
+                    response: Response<MediaResponse>
+                ) {
+                    Picasso.with(this@ScrollingActivity).load(response.body()?.sourceUrl)
+                        .placeholder(R.drawable.blog_placeholder).into(imageViewHeader)
+
+                }
+            })
+
     }
 }

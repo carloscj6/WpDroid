@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Collection(
     @SerializedName("href")
-    var href: String
+    var href: String?
 )

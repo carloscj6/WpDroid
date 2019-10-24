@@ -36,9 +36,8 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(),A
         val imageView: ImageView = itemView.findViewById(R.id.imageViewPost)
         val title: HtmlTextView = itemView.findViewById(R.id.textViewPostTitle)
         fun bind(postResponse: PostResponse) {
-            title.setHtml(postResponse.title.rendered)
-            getImage(postResponse.featuredMedia)
-            warn(postResponse.title)
+            title.setHtml(postResponse.title?.rendered!!)
+            getImage(postResponse.featuredMedia!!)
             itemView.setOnClickListener {
                 itemView.context.startActivity<ScrollingActivity>(Utilities.BLOG_ID to postResponse.id)
             }
@@ -65,4 +64,6 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(),A
             })
         }
     }
+    //https://www.tecmint.com/wp-json/wp/v2/categories/408
+    //https://www.tecmint.com/wp-json/wp/v2/categories/687
 }

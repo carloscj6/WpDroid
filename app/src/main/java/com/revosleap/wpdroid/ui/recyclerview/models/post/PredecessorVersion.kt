@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PredecessorVersion(
     @SerializedName("href")
-    var href: String,
+    var href: String?,
     @SerializedName("id")
-    var id: Int
+    var id: Int?
 )

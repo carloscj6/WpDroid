@@ -5,59 +5,56 @@ import com.google.gson.annotations.SerializedName
 
 data class PostResponse(
     @SerializedName("author")
-    var author: Int,
+    var author: Int?,
     @SerializedName("categories")
-    var categories: List<Int>,
+    var categories: List<Int?>?,
     @SerializedName("comment_status")
-    var commentStatus: String,
+    var commentStatus: String?,
     @SerializedName("content")
-    var content: Content,
+    var content: Content?,
     @SerializedName("date")
-    var date: String,
+    var date: String?,
     @SerializedName("date_gmt")
-    var dateGmt: String,
+    var dateGmt: String?,
     @SerializedName("excerpt")
-    var excerpt: Excerpt,
+    var excerpt: Excerpt?,
     @SerializedName("featured_media")
-    var featuredMedia: Long,
+    var featuredMedia: Long?,
     @SerializedName("format")
-    var format: String,
+    var format: String?,
     @SerializedName("guid")
-    var guid: Guid,
+    var guid: Guid?,
     @SerializedName("id")
-    var id: Long,
-    @SerializedName("jetpack_featured_media_url")
-    var jetpackFeaturedMediaUrl: String,
-    @SerializedName("jetpack_publicize_connections")
-    var jetpackPublicizeConnections: List<Any>,
-    @SerializedName("jetpack_sharing_enabled")
-    var jetpackSharingEnabled: Boolean,
-    @SerializedName("jetpack_shortlink")
-    var jetpackShortlink: String,
+    var id: Long?,
     @SerializedName("link")
-    var link: String,
+    var link: String?,
     @SerializedName("_links")
-    var links: Links,
+    var links: Links?,
     @SerializedName("meta")
-    var meta: Meta,
+    var meta: Meta?,
     @SerializedName("modified")
-    var modified: String,
+    var modified: String?,
     @SerializedName("modified_gmt")
-    var modifiedGmt: String,
+    var modifiedGmt: String?,
     @SerializedName("ping_status")
-    var pingStatus: String,
+    var pingStatus: String?,
     @SerializedName("slug")
-    var slug: String,
+    var slug: String?,
     @SerializedName("status")
-    var status: String,
+    var status: String?,
     @SerializedName("sticky")
-    var sticky: Boolean,
+    var sticky: Boolean?,
     @SerializedName("tags")
-    var tags: List<Int>,
+    var tags: List<Int?>?,
     @SerializedName("template")
-    var template: String,
+    var template: String?,
     @SerializedName("title")
-    var title: Title,
+    var title: Title?,
     @SerializedName("type")
-    var type: String
-)
+    var type: String?
+) {
+    constructor() : this(null,null,null,null,null,null,null,
+        null,null,null,null,null,null,null,
+        null,null,null,null,null,null,null,
+        null,null,null)
+}

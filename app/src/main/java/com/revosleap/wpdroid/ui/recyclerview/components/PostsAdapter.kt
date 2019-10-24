@@ -45,8 +45,8 @@ class PostsAdapter:RecyclerView.Adapter<PostsAdapter.BlogItemView>() {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewPost)
         val title: HtmlTextView = itemView.findViewById(R.id.textViewPostTitle)
         fun bind(postResponse: PostResponse) {
-            title.setHtml(postResponse.title.rendered)
-            getImage(postResponse.featuredMedia)
+            title.setHtml(postResponse.title!!.rendered!!)
+            getImage(postResponse.featuredMedia!!)
             warn(postResponse.title)
             itemView.setOnClickListener {
                 itemView.context.startActivity<ScrollingActivity>(Utilities.BLOG_ID to postResponse.id)

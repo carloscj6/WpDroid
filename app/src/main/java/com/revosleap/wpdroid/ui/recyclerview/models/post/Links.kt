@@ -5,25 +5,25 @@ import com.google.gson.annotations.SerializedName
 
 data class Links(
     @SerializedName("about")
-    var about: List<About>,
+    var about: List<About?>?,
     @SerializedName("author")
-    var author: List<Author>,
+    var author: List<Author?>?,
     @SerializedName("collection")
-    var collection: List<Collection>,
+    var collection: List<Collection?>?,
     @SerializedName("curies")
-    var curies: List<Cury>,
+    var curies: List<Cury?>?,
     @SerializedName("predecessor-version")
-    var predecessorVersion: List<PredecessorVersion>,
+    var predecessorVersion: List<PredecessorVersion?>?,
     @SerializedName("replies")
-    var replies: List<Reply>,
+    var replies: List<Reply?>?,
     @SerializedName("self")
-    var self: List<Self>,
+    var self: List<Self?>?,
     @SerializedName("version-history")
-    var versionHistory: List<VersionHistory>,
+    var versionHistory: List<VersionHistory?>?,
     @SerializedName("wp:attachment")
-    var wpAttachment: List<WpAttachment>,
+    var wpAttachment: List<WpAttachment?>?,
     @SerializedName("wp:featuredmedia")
-    var wpFeaturedmedia: List<WpFeaturedmedia>,
+    var wpFeaturedmedia: List<WpFeaturedmedia?>?,
     @SerializedName("wp:term")
-    var wpTerm: List<WpTerm>
+    var wpTerm: List<WpTerm?>?
 )

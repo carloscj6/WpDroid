@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Excerpt(
     @SerializedName("protected")
-    var `protected`: Boolean,
+    var `protected`: Boolean?,
     @SerializedName("rendered")
-    var rendered: String
+    var rendered: String?
 )

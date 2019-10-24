@@ -9,7 +9,7 @@ data class CategoryResponse(
     @SerializedName("description")
     var description: String?,
     @SerializedName("id")
-    var id: Int?,
+    var id: Long?,
     @SerializedName("link")
     var link: String?,
     @SerializedName("_links")
@@ -24,4 +24,6 @@ data class CategoryResponse(
     var slug: String?,
     @SerializedName("taxonomy")
     var taxonomy: String?
-)
+) {
+    constructor() : this(null, null, null, null, null, null, null, null, null, null)
+}

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class VersionHistory(
     @SerializedName("count")
-    var count: Int,
+    var count: Int?,
     @SerializedName("href")
-    var href: String
+    var href: String?
 )

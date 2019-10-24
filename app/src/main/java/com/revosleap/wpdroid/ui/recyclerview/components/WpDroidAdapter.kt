@@ -8,10 +8,7 @@ import org.jetbrains.anko.warn
 class WpDroidAdapter : MultiTypeAdapter(),AnkoLogger {
     private val adapterItems = items.toMutableList()
 
-    fun addItems(itemList: List<Any>,clear:Boolean) {
-        if (clear){
-            adapterItems.clear()
-        }
+    fun addItems(itemList: List<Any>) {
         adapterItems.addAll(itemList)
         items = adapterItems
         notifyDataSetChanged()
@@ -23,7 +20,7 @@ class WpDroidAdapter : MultiTypeAdapter(),AnkoLogger {
         notifyDataSetChanged()
     }
 
-    fun clearAdapter() {
+    fun clearItems() {
         adapterItems.clear()
         notifyDataSetChanged()
     }
