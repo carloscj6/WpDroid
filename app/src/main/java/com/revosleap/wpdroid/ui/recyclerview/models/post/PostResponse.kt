@@ -7,7 +7,7 @@ data class PostResponse(
     @SerializedName("author")
     var author: Int?,
     @SerializedName("categories")
-    var categories: List<Int?>?,
+    var categories: List<Long?>?,
     @SerializedName("comment_status")
     var commentStatus: String?,
     @SerializedName("content")

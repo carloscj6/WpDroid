@@ -1,6 +1,10 @@
 package com.revosleap.wpdroid.utils
 
 object Utilities {
-    const val BASE_URL = "https://tecmint.com/wp-json/wp/v2/"
-    const val BLOG_ID="activity.bundle.blog.id"
+    const val BASE_URL = "https://www.diynatural.com/wp-json/wp/v2/"
+    const val BLOG_ID = "activity.bundle.blog.id"
+    const val LOADING = "items.loading"
+    const val SUCCESS = "items.successful"
+    const val ERROR = "items.error"
+    // tech "https://tecmint.com/wp-json/wp/v2/"
 }

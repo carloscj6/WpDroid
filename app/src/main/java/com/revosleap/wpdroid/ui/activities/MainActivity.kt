@@ -13,13 +13,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
-import com.revosleap.wpdroid.ui.recyclerview.components.PostsAdapter
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewCategory
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
+import com.revosleap.wpdroid.utils.Utilities
+import com.revosleap.wpdroid.utils.callbacks.CategorySelection
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,24 +33,23 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-    AnkoLogger {
-
+    AnkoLogger, CategorySelection {
+    private var selectCategoryId: Long? = null
     private val wpDroidAdapter = WpDroidAdapter()
     private val categoryAdapter = WpDroidAdapter()
     private var toggle: ActionBarDrawerToggle? = null
     var wpDataService: GetWpDataService? = null
+    val itemViewCategory = ItemViewCategory()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         wpDroidAdapter.register(ItemViewBlog())
-        categoryAdapter.register(ItemViewCategory())
+        categoryAdapter.register(itemViewCategory)
         wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         loadUI()
-//        instRecyclerView(recyclerViewCategories, CategoryResponse())
-//        instRecyclerView(recyclerViewPosts, PostResponse())
 
     }
 
@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun loadUI() {
+        itemViewCategory.setCategorySelection(this)
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Refreshing...", Snackbar.LENGTH_LONG)
@@ -88,8 +89,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         instantiateCategoryRecyclerView()
         instantiateRecyclerView()
-        getPosts(1)
+        getPosts(1, null)
         getCategories(1)
+
+    }
+
+    override fun onCategorySelected(categoryId: Long) {
+        drawer_layout.closeDrawer(GravityCompat.START)
+        wpDroidAdapter.clearItems()
+        getPosts(1, categoryId)
 
     }
 
@@ -106,41 +114,62 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     totalItemsCount: Int,
                     view: RecyclerView
                 ) {
-                    getPosts(page)
+                    if (selectCategoryId != null) {
+                        getPosts(page, selectCategoryId)
+                    } else getPosts(page, null)
                 }
             })
         }
 
     }
 
-    private fun getPosts(page: Long) {
 
-        val postsAdapter = PostsAdapter()
-        val wpDataService =
-            RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
-        val call = wpDataService?.getWpPosts(30, page)
+    private fun getPosts(page: Long, categoryId: Long?) {
+        if (page == 1L) {
+            updateUi(Utilities.LOADING)
+        }
+        val call: Call<List<PostResponse>>? = if (categoryId == null) {
+            selectCategoryId = null
+            wpDataService?.getWpPosts(20, page)
+        } else {
+            selectCategoryId = categoryId
+            wpDataService?.getWpPostsCategorized(categoryId, 20, page)
+        }
+
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
-
+                warn("${call.request().url()} \n ${t.message}")
+                updateUi(Utilities.ERROR)
             }
 
             override fun onResponse(
                 call: Call<List<PostResponse>>,
                 response: Response<List<PostResponse>>
             ) {
-                if (response.body()?.size!! > 0) {
-                    linearLayoutOops.visibility = View.GONE
-                    recyclerViewPosts.visibility = View.VISIBLE
-                    wpDroidAdapter.addItems(response.body()!!)
+                warn(call.request().url().toString())
+                if (response.isSuccessful) {
+                    if (response.body()?.size != null && response.body()?.size!! > 0) {
+                        linearLayoutOops?.visibility = View.GONE
+                        recyclerViewPosts?.visibility = View.VISIBLE
+                        wpDroidAdapter.addItems(response.body()!!)
+                        updateUi(Utilities.SUCCESS)
 
-                } else textViewOops.text = response.errorBody()?.string()
+                    } else {
+                        updateUi(Utilities.ERROR)
+                        textViewOops.text = "Request is Successful but no post was found!!"
+                    }
+                } else {
+                    textViewOops.text =
+                        "Request is Successful but there seems to be problem with getting posts"
+                    updateUi(Utilities.ERROR)
+                }
+
 
             }
         })
     }
 
     private fun instantiateCategoryRecyclerView() {
-
         val linearLayoutManager = LinearLayoutManager(this@MainActivity)
         recyclerViewCategories.apply {
             adapter = categoryAdapter
@@ -160,7 +189,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun getCategories(page: Long) {
-        val call = wpDataService?.getWpCategories(30, page)
+        val call = wpDataService?.getWpCategories(30, page, true)
         call?.enqueue(object : Callback<List<CategoryResponse>> {
             override fun onFailure(call: Call<List<CategoryResponse>>, t: Throwable) {
 
@@ -181,97 +210,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
-
-    private fun getData(call: Call<List<Any>>, dataClass: Any) {
-        warn("Getting data")
-        call.enqueue(object : Callback<List<Any>> {
-            override fun onFailure(call: Call<List<Any>>, t: Throwable) {
-
+    private fun updateUi(status: String) {
+        when (status) {
+            Utilities.LOADING -> {
+                progressLoading.visibility = View.VISIBLE
+                linearLayoutOops.visibility = View.GONE
+                recyclerViewPosts.visibility = View.GONE
             }
-
-            override fun onResponse(call: Call<List<Any>>, response: Response<List<Any>>) {
-                updateUi(dataClass)
-                if (response.isSuccessful) {
-                    val items = response.body()
-                    if (items!!.isNotEmpty()) {
-                        addItemsToRecyclerView(listOf(items), dataClass)
-                    }
-                }
-            }
-        })
-    }
-
-    private fun addItemsToRecyclerView(itemList: List<Any>, dataClass: Any) {
-
-        when (dataClass) {
-            PostResponse() -> {
-
-                val items= itemList as List<PostResponse>
-                wpDroidAdapter.addItems(items)
-                warn("Adding posts to RC ${items.size}")
-            }
-            CategoryResponse() -> {
-                val items= itemList as List<CategoryResponse>
-                categoryAdapter.addItems(items)
-                warn("Adding categories to RC ${items.size}")
-            }
-        }
-    }
-
-    private fun instRecyclerView(recyclerView: RecyclerView, dataClass: Any) {
-        warn("Inst Recyclerview")
-        val linearLayoutManager = LinearLayoutManager(this@MainActivity)
-        when (dataClass) {
-            CategoryResponse() ->{
-                recyclerView.adapter = categoryAdapter
-                callCategories(1)
-            }
-            PostResponse() -> {
-                recyclerView.adapter = wpDroidAdapter
-                callPosts(1)
-            }
-        }
-        recyclerView.apply {
-            adapter = categoryAdapter
-            layoutManager = linearLayoutManager
-            hasFixedSize()
-            addOnScrollListener(object : RecyclerViewPagination(linearLayoutManager) {
-                override fun onLoadMore(
-                    page: Long,
-                    totalItemsCount: Int,
-                    view: RecyclerView
-                ) {
-                    when (dataClass) {
-                        CategoryResponse() -> callCategories(page)
-                        PostResponse() -> callPosts(page)
-                    }
-                }
-            })
-        }
-    }
-
-    private fun callCategories(page: Long) {
-        warn("Calling categories")
-        val call = wpDataService?.getWpCategories(30, page)!!
-        getData(call as Call<List<Any>>, CategoryResponse())
-    }
-
-    private fun callPosts(page: Long) {
-        warn("Calling posts")
-        val call = wpDataService?.getWpPosts(30, page)!!
-        getData(call as Call<List<Any>>, PostResponse())
-    }
-
-    private fun updateUi(dataClass: Any) {
-        warn("Updating ui")
-        when (dataClass) {
-            CategoryResponse() -> {
-                progressBarCategories.visibility = View.GONE
-                recyclerViewCategories.visibility = View.VISIBLE
-            }
-            PostResponse() -> {
+            Utilities.SUCCESS -> {
                 linearLayoutOops.visibility = View.GONE
                 recyclerViewPosts.visibility = View.VISIBLE
+                progressLoading.visibility = View.GONE
+            }
+            Utilities.ERROR -> {
+                linearLayoutOops.visibility = View.VISIBLE
+                recyclerViewPosts.visibility = View.GONE
+                progressLoading.visibility = View.GONE
             }
         }
     }

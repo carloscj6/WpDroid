@@ -34,7 +34,9 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'org.sufficientlysecure:html-textview:3.7'
+    implementation 'com.nex3z:flow-layout:1.3.0'
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation 'com.revosleap.layout:tagcloud:1.0.0'
     implementation 'com.drakeet.multitype:multitype:4.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

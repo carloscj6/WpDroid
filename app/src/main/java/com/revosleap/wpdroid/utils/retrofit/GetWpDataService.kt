@@ -20,12 +20,29 @@ interface GetWpDataService {
     fun getWpCategory(@Path("id") categoryId: Long): Call<CategoryResponse>
 
     @GET("posts/")
-    fun getWpPosts(@Query("per_page") postCount: Int, @Query("page") page: Long): Call<List<PostResponse>>
+    fun getWpPosts(
+        @Query(
+            "per_page"
+        ) postCount: Int, @Query("page") page: Long
+    ): Call<List<PostResponse>>
+
+    @GET("posts/")
+    fun getWpPostsCategorized(
+        @Query("categories") categoryId: Long, @Query("per_page") postCount: Int, @Query(
+            "page"
+        ) page: Long
+    ): Call<List<PostResponse>>
 
     @GET("tags/")
-    fun getWpTags(@Query("per_page") tagCount: Int, @Query("page") tagPage: Long): Call<List<TagResponse>>
+    fun getWpTags(
+        @Query(
+            "per_page"
+        ) tagCount: Int, @Query("page") tagPage: Long
+    ): Call<List<TagResponse>>
 
-    @GET("tags/")
-    fun getWpCategories(@Query("per_page") categoryCount: Int, @Query("page") categoryPage: Long): Call<List<CategoryResponse>>
+    @GET("categories/")
+    fun getWpCategories(
+        @Query("per_page") categoryCount: Int, @Query("page") categoryPage: Long,
+     @Query("hide_empty")hideEmpty:Boolean): Call<List<CategoryResponse>>
 
 }
