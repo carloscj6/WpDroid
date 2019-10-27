@@ -1,10 +1,13 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +16,7 @@ import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.media.MediaResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
 import com.revosleap.wpdroid.utils.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -88,9 +92,12 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 post.categories?.forEach {
                     getCategory(it!!)
                 }
-                val sdf= SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-                val sdfInput= SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.getDefault())
-                val date=sdfInput.parse(post.dateGmt!!)
+                post.tags?.forEach {
+                    getTag(it!!)
+                }
+                val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                val sdfInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                val date = sdfInput.parse(post.dateGmt!!)
                 textViewPostDate.text = sdf.format(date)
             }
 
@@ -132,6 +139,35 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 setCategoryView(response.body())
             }
         })
+    }
+
+    private fun getTag(id: Long) {
+        val call = wpDataService?.getWpTag(id)
+        call?.enqueue(object : Callback<TagResponse> {
+            override fun onFailure(call: Call<TagResponse>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<TagResponse>,
+                response: Response<TagResponse>
+            ) {
+                warn(call.request().url().toString())
+                setTagView(response.body())
+            }
+        })
+    }
+
+    fun setTagView(categoryResponse: TagResponse?) {
+        val view = findViewById<View>(android.R.id.content) as ViewGroup
+        val categoryView = layoutInflater.inflate(R.layout.item_tag, view, false)
+        val textView = categoryView.findViewById<TextView>(R.id.textViewHashTag)
+        val frameLayoutTAG= categoryView.findViewById<FrameLayout>(R.id.frameLayoutTag)
+        frameLayoutTAG.layoutParams.width= FrameLayout.LayoutParams.WRAP_CONTENT
+        val hashTag= "#${categoryResponse?.name}"
+        textView.paintFlags= Paint.UNDERLINE_TEXT_FLAG
+        textView.text = hashTag
+        flowLayoutTags.addView(categoryView)
     }
 
     fun setCategoryView(categoryResponse: CategoryResponse?) {

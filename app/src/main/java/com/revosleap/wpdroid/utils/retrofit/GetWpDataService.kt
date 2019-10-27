@@ -19,6 +19,9 @@ interface GetWpDataService {
     @GET("categories/{id}")
     fun getWpCategory(@Path("id") categoryId: Long): Call<CategoryResponse>
 
+    @GET("tags/{id}")
+    fun getWpTag(@Path("id") categoryId: Long): Call<TagResponse>
+
     @GET("posts/")
     fun getWpPosts(
         @Query(

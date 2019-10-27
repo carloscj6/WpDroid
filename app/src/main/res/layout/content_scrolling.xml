@@ -2,97 +2,161 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.activities.ScrollingActivity"
     tools:showIn="@layout/activity_scrolling">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <org.sufficientlysecure.htmltextview.HtmlTextView
-                android:layout_width="0dp"
-                android:padding="8dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/textViewTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textSize="22sp"
                 android:textStyle="bold"
-                android:textSize="22sp"/>
-            <com.nex3z.flowlayout.FlowLayout
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewTitle"
-                app:flChildSpacing="4dp"
-                app:flRowSpacing="2dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.nex3z.flowlayout.FlowLayout
+                android:id="@+id/flowLayoutCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/flowLayoutCategory"/>
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:flChildSpacing="4dp"
+                app:flRowSpacing="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
+
             <org.sufficientlysecure.htmltextview.HtmlTextView
+                android:id="@+id/textViewAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:drawableStart="@drawable/ic_person"
                 android:drawablePadding="4dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintTop_toBottomOf="@id/flowLayoutCategory"
-                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="center"
                 android:scaleX="0.7"
                 android:scaleY="0.7"
-                android:textSize="18sp"
                 android:textAlignment="center"
-                android:id="@+id/textViewAuthor"
                 android:textColor="@android:color/darker_gray"
-                android:gravity="center"/>
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/flowLayoutCategory" />
+
             <TextView
-                android:textAlignment="center"
-                android:layout_marginTop="4dp"
+                android:id="@+id/textViewPostDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewPostDate"
-                app:layout_constraintStart_toEndOf="@id/textViewAuthor"
-                app:layout_constraintTop_toBottomOf="@id/flowLayoutCategory"
+                android:layout_marginTop="4dp"
                 android:drawableStart="@drawable/ic_time"
                 android:drawablePadding="4dp"
                 android:scaleX="0.7"
                 android:scaleY="0.7"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="18sp"
-                android:textColor="@android:color/darker_gray"/>
+                app:layout_constraintStart_toEndOf="@id/textViewAuthor"
+                app:layout_constraintTop_toBottomOf="@id/flowLayoutCategory" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="8dp"
                 android:alpha=".5"
                 android:background="@android:color/darker_gray"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="6dp"
-                app:layout_constraintTop_toBottomOf="@id/textViewPostDate"/>
+                app:layout_constraintTop_toBottomOf="@id/textViewPostDate" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <org.sufficientlysecure.htmltextview.HtmlTextView
-            android:padding="8dp"
+            android:id="@+id/textViewPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:id="@+id/textViewPost"/>
+            android:padding="8dp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:alpha=".5"
-            android:layout_marginTop="4dp"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:alpha=".5"
+            android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tags" />
+
+            <com.nex3z.flowlayout.FlowLayout
+                android:id="@+id/flowLayoutTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                app:flChildSpacing="4dp"
+                app:flRowSpacing="2dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comments" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/write_your_comment" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerViewComments"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
-
-
 
 
 </androidx.core.widget.NestedScrollView>

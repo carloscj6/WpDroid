@@ -45,7 +45,7 @@ data class PostResponse(
     @SerializedName("sticky")
     var sticky: Boolean?,
     @SerializedName("tags")
-    var tags: List<Int?>?,
+    var tags: List<Long?>?,
     @SerializedName("template")
     var template: String?,
     @SerializedName("title")

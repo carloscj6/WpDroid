@@ -10,9 +10,9 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.dialogs.BottomSheetTags
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
@@ -32,7 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+class MainActivity : AppCompatActivity(),
     AnkoLogger, CategorySelection {
     private var selectCategoryId: Long? = null
     private val wpDroidAdapter = WpDroidAdapter()
@@ -66,9 +66,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun onNavigationItemSelected(menu: MenuItem): Boolean {
-        return true
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_tags -> {
+                BottomSheetTags().show(supportFragmentManager, "Tags")
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
+
 
     private fun loadUI() {
         itemViewCategory.setCategorySelection(this)
@@ -85,8 +91,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.addDrawerListener(toggle!!)
         toggle?.syncState()
-        nav_view.setNavigationItemSelectedListener(this)
-
         instantiateCategoryRecyclerView()
         instantiateRecyclerView()
         getPosts(1, null)
