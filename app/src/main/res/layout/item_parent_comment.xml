@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:background="#93DBD9D9"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/circleImageViewComment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/circleImageViewComment"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:id="@+id/textViewCommentAuthor"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewCommentAuthor"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toEndOf="@id/circleImageViewComment"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/textViewCommentDate"
+            android:textColor="@android:color/darker_gray"/>
+        <org.sufficientlysecure.htmltextview.HtmlTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/texViewComment"
+            app:layout_constraintTop_toBottomOf="@id/circleImageViewComment"
+            android:layout_marginTop="8dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:alpha=".3"
+        android:paddingTop="4dp"/>
 
 </LinearLayout>

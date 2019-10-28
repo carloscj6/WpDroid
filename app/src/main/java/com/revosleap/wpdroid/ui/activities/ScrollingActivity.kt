@@ -7,16 +7,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
+import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewComment
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.comment.CommentResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.media.MediaResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.user.UserResponse
 import com.revosleap.wpdroid.utils.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -34,11 +38,14 @@ import java.util.*
 
 class ScrollingActivity : AppCompatActivity(), AnkoLogger {
     private var wpDataService: GetWpDataService? = null
-
+    private val commentAdapter= WpDroidAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling)
         setSupportActionBar(toolbar)
+        commentAdapter.register(ItemViewComment())
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -86,7 +93,6 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 textViewPost.setHtml(post?.content?.rendered!!, HtmlHttpImageGetter(textViewPost))
                 blogTitle.setHtml(post.title!!.rendered!!)
                 textViewTitle.setHtml(post.title!!.rendered!!)
-                textViewAuthor.setHtml("Carlos")
                 getMedia(post.featuredMedia!!)
                 progDialog.dismiss()
                 post.categories?.forEach {
@@ -99,6 +105,8 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 val sdfInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
                 val date = sdfInput.parse(post.dateGmt!!)
                 textViewPostDate.text = sdf.format(date)
+                getAuthor(post.author!!)
+                getPostComments(post.id!!)
             }
 
         })
@@ -158,14 +166,70 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         })
     }
 
+    private fun getAuthor(id: Long) {
+        val call = wpDataService?.getWpUser(id)
+        call?.enqueue(object : Callback<UserResponse> {
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
+            ) {
+                textViewAuthor.setHtml(response.body()?.name!!)
+            }
+        })
+    }
+
+    private fun getPostComments(id: Long) {
+        val call = wpDataService?.getWpPostComments(id)
+        call?.enqueue(object : Callback<List<CommentResponse>> {
+            override fun onFailure(call: Call<List<CommentResponse>>, t: Throwable) {
+                warn(t.message)
+                progressBarComments.visibility = View.GONE
+                textViewCommentError.visibility = View.VISIBLE
+            }
+
+            override fun onResponse(
+                call: Call<List<CommentResponse>>,
+                response: Response<List<CommentResponse>>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.body()?.size != null && response.body()?.size!! > 0) {
+                        showComments(response.body()!!)
+                    } else {
+                        val error = "This post has no comments"
+                        progressBarComments.visibility = View.GONE
+                        textViewCommentError.visibility = View.VISIBLE
+                        textViewCommentError.text = error
+                    }
+                }
+            }
+        })
+    }
+
+    fun showComments(comments:List<CommentResponse>){
+        progressBarComments.visibility = View.GONE
+        textViewCommentError.visibility = View.GONE
+        recyclerViewComments.visibility= View.VISIBLE
+
+        recyclerViewComments.apply {
+            adapter= commentAdapter
+            layoutManager= LinearLayoutManager(this@ScrollingActivity)
+
+        }
+        commentAdapter.addItems(comments)
+    }
+
     fun setTagView(categoryResponse: TagResponse?) {
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         val categoryView = layoutInflater.inflate(R.layout.item_tag, view, false)
         val textView = categoryView.findViewById<TextView>(R.id.textViewHashTag)
-        val frameLayoutTAG= categoryView.findViewById<FrameLayout>(R.id.frameLayoutTag)
-        frameLayoutTAG.layoutParams.width= FrameLayout.LayoutParams.WRAP_CONTENT
-        val hashTag= "#${categoryResponse?.name}"
-        textView.paintFlags= Paint.UNDERLINE_TEXT_FLAG
+        val frameLayoutTAG = categoryView.findViewById<FrameLayout>(R.id.frameLayoutTag)
+        frameLayoutTAG.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
+        val hashTag = "#${categoryResponse?.name}"
+        textView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         textView.text = hashTag
         flowLayoutTags.addView(categoryView)
     }

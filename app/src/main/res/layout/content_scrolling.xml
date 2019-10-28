@@ -111,6 +111,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:text="@string/tags" />
 
             <com.nex3z.flowlayout.FlowLayout
@@ -124,6 +126,14 @@
                 app:flChildSpacing="4dp"
                 app:flRowSpacing="2dp" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:alpha=".5"
+            android:background="@android:color/darker_gray" />
 
         <LinearLayout
             android:id="@+id/linearLayoutComments"
@@ -136,10 +146,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:text="@string/comments" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
+                android:id="@+id/editTextComment"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -148,10 +162,29 @@
                     android:hint="@string/write_your_comment" />
             </com.google.android.material.textfield.TextInputLayout>
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recyclerViewComments"/>
+            <ProgressBar
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:indeterminate="true"
+                android:id="@+id/progressBarComments"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                android:textSize="10sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comment_load_error"
+                android:drawableTop="@drawable/ic_error_outline_black"
+                android:drawablePadding="4dp"
+                android:id="@+id/textViewCommentError"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
 
         </LinearLayout>
 

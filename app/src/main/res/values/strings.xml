@@ -18,4 +18,5 @@
     <string name="tags">Tags</string>
     <string name="comments">Comments</string>
     <string name="write_your_comment">Write your Comment</string>
+    <string name="comment_load_error">Error happened while getting comments. Please retry.</string>
 </resources>

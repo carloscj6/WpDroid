@@ -1,9 +1,11 @@
 package com.revosleap.wpdroid.utils.retrofit
 
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.comment.CommentResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.media.MediaResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.user.UserResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -21,6 +23,12 @@ interface GetWpDataService {
 
     @GET("tags/{id}")
     fun getWpTag(@Path("id") categoryId: Long): Call<TagResponse>
+
+    @GET("users/{id}")
+    fun getWpUser(@Path("id") userId: Long): Call<UserResponse>
+
+    @GET("comments")
+    fun getWpPostComments(@Query("post")postId:Long):Call<List<CommentResponse>>
 
     @GET("posts/")
     fun getWpPosts(

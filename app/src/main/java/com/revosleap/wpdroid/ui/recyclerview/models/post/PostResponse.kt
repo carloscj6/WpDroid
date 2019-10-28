@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PostResponse(
     @SerializedName("author")
-    var author: Int?,
+    var author: Long?,
     @SerializedName("categories")
     var categories: List<Long?>?,
     @SerializedName("comment_status")
