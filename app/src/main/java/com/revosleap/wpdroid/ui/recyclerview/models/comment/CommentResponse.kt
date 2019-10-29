@@ -19,7 +19,7 @@ data class CommentResponse(
     @SerializedName("date_gmt")
     var dateGmt: String?,
     @SerializedName("id")
-    var id: Int?,
+    var id: Long?,
     @SerializedName("link")
     var link: String?,
     @SerializedName("_links")
@@ -27,9 +27,9 @@ data class CommentResponse(
     @SerializedName("meta")
     var meta: List<Any?>?,
     @SerializedName("parent")
-    var parent: Int?,
+    var parent: Long?,
     @SerializedName("post")
-    var post: Int?,
+    var post: Long?,
     @SerializedName("status")
     var status: String?,
     @SerializedName("type")

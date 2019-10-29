@@ -1,6 +1,6 @@
 package com.revosleap.wpdroid.utils.retrofit
 
-import com.revosleap.wpdroid.utils.Utilities
+import com.revosleap.wpdroid.utils.misc.Utilities
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

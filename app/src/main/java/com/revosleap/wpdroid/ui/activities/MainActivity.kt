@@ -19,7 +19,7 @@ import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewCategory
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
-import com.revosleap.wpdroid.utils.Utilities
+import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.callbacks.CategorySelection
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -159,13 +159,19 @@ class MainActivity : AppCompatActivity(),
                         updateUi(Utilities.SUCCESS)
 
                     } else {
-                        updateUi(Utilities.ERROR)
-                        textViewOops.text = "Request is Successful but no post was found!!"
+                        if (page == 1L) {
+                            updateUi(Utilities.ERROR)
+                            textViewOops.text = "Request is Successful but no post was found!!"
+                        }
+
                     }
                 } else {
-                    textViewOops.text =
-                        "Request is Successful but there seems to be problem with getting posts"
-                    updateUi(Utilities.ERROR)
+                    if (page == 1L) {
+                        textViewOops.text =
+                            "Request is Successful but there seems to be problem with getting posts"
+                        updateUi(Utilities.ERROR)
+                    }
+
                 }
 
 

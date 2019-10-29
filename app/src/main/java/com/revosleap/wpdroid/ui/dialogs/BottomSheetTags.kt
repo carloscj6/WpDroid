@@ -12,7 +12,7 @@ import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewTag
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
-import com.revosleap.wpdroid.utils.Utilities
+import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.tag_layout.*

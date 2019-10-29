@@ -10,13 +10,12 @@ import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.activities.ScrollingActivity
 import com.revosleap.wpdroid.ui.recyclerview.models.media.MediaResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
-import com.revosleap.wpdroid.utils.Utilities
+import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.warn
 import org.sufficientlysecure.htmltextview.HtmlTextView
 import retrofit2.Call
 import retrofit2.Callback
