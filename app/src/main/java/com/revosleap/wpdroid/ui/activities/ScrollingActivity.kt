@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -34,7 +33,9 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.activity_scrolling.*
 import kotlinx.android.synthetic.main.content_scrolling.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.warn
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,6 +63,9 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         getPost()
         val image = BitmapFactory.decodeResource(resources, R.drawable.blog_item_placeholder)
         imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, 10))
+        buttonRetry.setOnClickListener {
+            getPost()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -190,17 +194,27 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         val call = wpDataService?.getWpUser(id)
         call?.enqueue(object : Callback<UserResponse> {
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-
+                updateUI(Utilities.ERROR)
             }
 
             override fun onResponse(
                 call: Call<UserResponse>,
                 response: Response<UserResponse>
             ) {
-                textViewAuthor.setHtml(response.body()?.name!!)
-                textViewAuthor?.setOnClickListener {
-                    startActivity<AuthorActivity>(Utilities.AUTHOR_ID to response.body()?.id)
+                if (response.isSuccessful){
+                    textViewAuthor.setHtml(response.body()?.name!!)
+                    textViewAuthor?.setOnClickListener {
+                        startActivity<AuthorActivity>(Utilities.AUTHOR_ID to response.body()?.id)
+                    }
+                    updateUI(Utilities.SUCCESS)
+                }else{
+                    updateUI(Utilities.ERROR)
+                    buttonRetry.text="Quit"
+                    buttonRetry.setOnClickListener {
+                        finish()
+                    }
                 }
+
             }
         })
     }
@@ -334,5 +348,26 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 .show(supportFragmentManager, "Cat")
         }
         flowLayoutCategory.addView(categoryView)
+    }
+
+    private fun updateUI(status: String) {
+        when (status) {
+            Utilities.ERROR -> {
+                progressBarPost.visibility = View.GONE
+                linearLayoutError.visibility = View.VISIBLE
+                linearLayoutPost.visibility = View.GONE
+            }
+            Utilities.LOADING -> {
+                progressBarPost.visibility = View.VISIBLE
+                linearLayoutError.visibility = View.GONE
+                linearLayoutPost.visibility = View.GONE
+            }
+
+            Utilities.SUCCESS -> {
+                progressBarPost.visibility = View.GONE
+                linearLayoutError.visibility = View.GONE
+                linearLayoutPost.visibility = View.VISIBLE
+            }
+        }
     }
 }
