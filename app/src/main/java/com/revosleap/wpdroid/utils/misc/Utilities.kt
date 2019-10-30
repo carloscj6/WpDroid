@@ -1,7 +1,7 @@
 package com.revosleap.wpdroid.utils.misc
 
 object Utilities {
-    const val BASE_URL = "https://experiencenature.com.au/wp-json/wp/v2"
+    const val BASE_URL = "https://tecmint.com/wp-json/wp/v2/"
     const val BLOG_ID = "activity.bundle.blog.id"
     const val AUTHOR_ID = "activity.bundle.author.id"
     const val LOADING = "items.loading"
@@ -13,5 +13,5 @@ object Utilities {
     // linux tech "https://tecmint.com/wp-json/wp/v2/"
     // diy "https://www.diynatural.com/wp-json/wp/v2/"
     // android https://www.androidhive.info/wp-json/wp/v2/
-    // nature blog https://experiencenature.com.au/wp-json/wp/v2
+
 }

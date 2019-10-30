@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity(),
                 call: Call<List<CategoryResponse>>,
                 response: Response<List<CategoryResponse>>
             ) {
-                if (response.body()?.size!! > 0) {
+                if (response.body() != null && response.body()?.size!! > 0) {
                     progressBarCategories.visibility = View.GONE
                     recyclerViewCategories.visibility = View.VISIBLE
                     categoryAdapter.addItems(response.body()!!)
