@@ -10,6 +10,7 @@ import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
 import com.revosleap.wpdroid.utils.callbacks.CategorySelection
 import org.jetbrains.anko.AnkoLogger
+import org.sufficientlysecure.htmltextview.HtmlTextView
 import java.util.*
 
 class ItemViewCategory : ItemViewBinder<CategoryResponse, ItemViewCategory.CategoryViewHolder>() {
@@ -31,11 +32,11 @@ class ItemViewCategory : ItemViewBinder<CategoryResponse, ItemViewCategory.Categ
     }
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), AnkoLogger {
-        private var categoryText: TextView = itemView.findViewById(R.id.textViewCategoryList)
+        private var categoryText: HtmlTextView = itemView.findViewById(R.id.textViewCategoryList)
         fun bind(categoryResponse: CategoryResponse) {
             val name = categoryResponse.name
             val category = name?.substring(0,1)?.toUpperCase(Locale.getDefault()) + name?.substring(1)
-            categoryText.text = category
+            categoryText.setHtml(category)
             itemView.setOnClickListener {
                 categorySelection?.onCategorySelected(categoryResponse.id!!)
             }
