@@ -84,16 +84,9 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
     private fun getPost() {
         val postId = intent.getLongExtra(Utilities.BLOG_ID, 0)
         val call = wpDataService?.getWpPost(postId)
-        val progDialog = indeterminateProgressDialog("Please wait...", "Getting Post")
-        progDialog.show()
+
         call?.enqueue(object : Callback<PostResponse> {
             override fun onFailure(call: Call<PostResponse>, t: Throwable) {
-                progDialog.dismiss()
-                Toast.makeText(this@ScrollingActivity, t.message, Toast.LENGTH_SHORT).show()
-                alert(t.message!!) {
-                    yesButton { getPost() }
-                    noButton { finish() }
-                }.show()
 
             }
 
@@ -103,7 +96,6 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 blogTitle.setHtml(post.title!!.rendered!!)
                 textViewTitle.setHtml(post.title!!.rendered!!)
                 getMedia(post.featuredMedia!!)
-                progDialog.dismiss()
                 post.categories?.forEach {
                     getCategory(it!!)
                 }
@@ -207,8 +199,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
             ) {
                 textViewAuthor.setHtml(response.body()?.name!!)
                 textViewAuthor?.setOnClickListener {
-                    BottomSheetItems.getInstance(response.body()?.id!!, Utilities.ITEM_AUTHOR)
-                        .show(supportFragmentManager, "Author")
+                    startActivity<AuthorActivity>(Utilities.AUTHOR_ID to response.body()?.id)
                 }
             }
         })

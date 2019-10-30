@@ -20,4 +20,6 @@
     <string name="write_your_comment">Write your Comment</string>
     <string name="comment_load_error">Error happened while getting comments. Please retry.</string>
     <string name="retry">Retry</string>
+    <string name="author_posts">Author Posts</string>
+    <string name="post_error">Error Occurred While Getting The Post</string>
 </resources>

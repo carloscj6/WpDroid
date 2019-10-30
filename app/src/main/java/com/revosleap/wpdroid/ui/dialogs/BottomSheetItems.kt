@@ -113,7 +113,7 @@ class BottomSheetItems : FullScreenBottomSheet() {
     }
 
     fun getAuthorPosts(page: Long) {
-        val call = wpDataService?.getAuthorPosts(id!!, 30)
+        val call = wpDataService?.getAuthorPosts(id!!, 30,page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
                 updateUI(Utilities.ERROR)

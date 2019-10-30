@@ -41,6 +41,16 @@
                 android:layout_height="wrap_content"
                 android:text="Oops! Something Unexpected Happened"
                 android:id="@+id/textViewOops"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:text="@string/retry"
+                android:background="@drawable/error_button_bg"
+                android:id="@+id/buttonRetry"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center_horizontal"
+                />
 
         </LinearLayout>
 

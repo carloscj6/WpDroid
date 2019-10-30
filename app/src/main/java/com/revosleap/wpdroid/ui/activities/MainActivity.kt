@@ -170,6 +170,7 @@ class MainActivity : AppCompatActivity(),
                         textViewOops.text =
                             "Request is Successful but there seems to be problem with getting posts"
                         updateUi(Utilities.ERROR)
+                        buttonRetry.visibility= View.GONE
                     }
 
                 }
@@ -237,6 +238,10 @@ class MainActivity : AppCompatActivity(),
                 recyclerViewPosts.visibility = View.GONE
                 progressLoading.visibility = View.GONE
             }
+        }
+        buttonRetry?.setOnClickListener {
+            getCategories(1)
+            getPosts(1,null)
         }
     }
 }
