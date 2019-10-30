@@ -12,6 +12,7 @@ import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewTag
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
+import com.revosleap.wpdroid.utils.callbacks.TagSelected
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -20,7 +21,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BottomSheetTags : BottomSheetDialogFragment() {
+class BottomSheetTags : BottomSheetDialogFragment(), TagSelected {
+    private val itemViewTag = ItemViewTag()
     private val tagAdapter = WpDroidAdapter()
 
     override fun onCreateView(
@@ -28,7 +30,8 @@ class BottomSheetTags : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        tagAdapter.register(ItemViewTag())
+        itemViewTag.setTagClick(this)
+        tagAdapter.register(itemViewTag)
         return inflater.inflate(R.layout.tag_layout, container, false)
     }
 
@@ -37,9 +40,13 @@ class BottomSheetTags : BottomSheetDialogFragment() {
         getTags(1)
     }
 
+    override fun onTagSelected(tagResponse: TagResponse) {
+        BottomSheetItems.getInstance(tagResponse.id!!, Utilities.ITEM_TAG).show(activity?.supportFragmentManager!!,"Tags")
+    }
+
     private fun instantiateViews() {
         val gridLayoutManager = GridLayoutManager(context, 3)
-        recyclerViewTags.apply {
+        recyclerViewItems.apply {
             adapter = tagAdapter
             layoutManager = gridLayoutManager
             hasFixedSize()
@@ -61,7 +68,7 @@ class BottomSheetTags : BottomSheetDialogFragment() {
         val call = wpDataService?.getWpTags(70, page)
         call?.enqueue(object : Callback<List<TagResponse>> {
             override fun onFailure(call: Call<List<TagResponse>>, t: Throwable) {
-                if (page==1L){
+                if (page == 1L) {
                     updateUi(Utilities.ERROR)
                 }
 
@@ -75,7 +82,7 @@ class BottomSheetTags : BottomSheetDialogFragment() {
                     tagAdapter.addItems(response.body()!!)
                     updateUi(Utilities.SUCCESS)
                 } else {
-                    if (page==1L){
+                    if (page == 1L) {
                         updateUi(Utilities.ERROR)
                     }
                 }
@@ -88,16 +95,16 @@ class BottomSheetTags : BottomSheetDialogFragment() {
             Utilities.LOADING -> {
                 progressBarTags?.visibility = View.VISIBLE
                 textViewTagError?.visibility = View.GONE
-                recyclerViewTags?.visibility = View.GONE
+                recyclerViewItems?.visibility = View.GONE
             }
             Utilities.SUCCESS -> {
                 textViewTagError?.visibility = View.GONE
-                recyclerViewTags?.visibility = View.VISIBLE
+                recyclerViewItems?.visibility = View.VISIBLE
                 progressBarTags?.visibility = View.GONE
             }
             Utilities.ERROR -> {
                 textViewTagError?.visibility = View.VISIBLE
-                recyclerViewTags?.visibility = View.GONE
+                recyclerViewItems?.visibility = View.GONE
                 progressBarTags?.visibility = View.GONE
             }
         }

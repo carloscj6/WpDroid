@@ -13,10 +13,10 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.dialogs.BottomSheetItems
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewComment
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
@@ -60,8 +60,8 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         getPost()
-        val image= BitmapFactory.decodeResource(resources,R.drawable.blog_item_placeholder)
-        imageViewHeader.setImageBitmap(UtilFun.blurred(this,image,10))
+        val image = BitmapFactory.decodeResource(resources, R.drawable.blog_item_placeholder)
+        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, 10))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -133,7 +133,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 call: Call<MediaResponse>,
                 response: Response<MediaResponse>
             ) {
-                val target = object :Target{
+                val target = object : Target {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
 
                     }
@@ -143,11 +143,17 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                     }
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                      imageViewHeader.setImageBitmap(UtilFun.blurred(this@ScrollingActivity,bitmap!!,20))
+                        imageViewHeader.setImageBitmap(
+                            UtilFun.blurred(
+                                this@ScrollingActivity,
+                                bitmap!!,
+                                20
+                            )
+                        )
                     }
                 }
                 Picasso.with(this@ScrollingActivity).load(response.body()?.sourceUrl)
-                   .into(target)
+                    .into(target)
 
             }
         })
@@ -200,6 +206,10 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 response: Response<UserResponse>
             ) {
                 textViewAuthor.setHtml(response.body()?.name!!)
+                textViewAuthor?.setOnClickListener {
+                    BottomSheetItems.getInstance(response.body()?.id!!, Utilities.ITEM_AUTHOR)
+                        .show(supportFragmentManager, "Author")
+                }
             }
         })
     }
@@ -254,7 +264,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 parentComment = ParentComment(childComments, it)
             }
 
-            if (parentComment!=null){
+            if (parentComment != null) {
                 parentComments.add(parentComment)
             }
         }
@@ -315,7 +325,12 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         val hashTag = "#${categoryResponse?.name}"
         textView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         textView.text = hashTag
+        view.setOnClickListener {
+            BottomSheetItems.getInstance(categoryResponse?.id!!, Utilities.ITEM_TAG)
+                .show(supportFragmentManager, "Tag")
+        }
         flowLayoutTags.addView(categoryView)
+
     }
 
     fun setCategoryView(categoryResponse: CategoryResponse?) {
@@ -323,7 +338,10 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         val categoryView = layoutInflater.inflate(R.layout.category_item, view, false)
         val textView = categoryView.findViewById<TextView>(R.id.tag_txt)
         textView.text = categoryResponse?.name!!
-        warn(categoryResponse.name!!)
+        view.setOnClickListener {
+            BottomSheetItems.getInstance(categoryResponse.id!!, Utilities.ITEM_CATEGORY)
+                .show(supportFragmentManager, "Cat")
+        }
         flowLayoutCategory.addView(categoryView)
     }
 }

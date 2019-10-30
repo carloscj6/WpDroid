@@ -44,6 +44,12 @@ interface GetWpDataService {
         ) page: Long
     ): Call<List<PostResponse>>
 
+    @GET("posts/")
+    fun getAuthorPosts(@Query("author")authorId:Long,@Query("per_page")postCount: Int):Call<List<PostResponse>>
+
+    @GET("posts/")
+    fun getWptTagPosts(@Query("tags")tagId:Long,@Query("per_page")postCount: Int):Call<List<PostResponse>>
+
     @GET("tags/")
     fun getWpTags(
         @Query(

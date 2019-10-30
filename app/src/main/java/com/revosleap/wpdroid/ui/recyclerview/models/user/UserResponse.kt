@@ -9,7 +9,7 @@ data class UserResponse(
     @SerializedName("description")
     var description: String?,
     @SerializedName("id")
-    var id: Int?,
+    var id: Long?,
     @SerializedName("link")
     var link: String?,
     @SerializedName("_links")

@@ -21,7 +21,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
-        android:id="@+id/recyclerViewTags"
+        android:id="@+id/recyclerViewItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
@@ -31,16 +31,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
-
-    <TextView
-        android:id="@+id/textViewTagError"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayoutError"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:drawableTop="@drawable/ic_error_outline_black"
-        android:drawablePadding="8dp"
-        android:text="@string/default_tag_error"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textViewTagError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@drawable/ic_error_outline_black"
+            android:drawablePadding="8dp"
+            android:text="@string/default_tag_error"
+             />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:text="@string/retry"
+            android:background="@drawable/error_button_bg"
+            android:id="@+id/buttonRetry"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
+
     </FrameLayout>
 
 </LinearLayout>
