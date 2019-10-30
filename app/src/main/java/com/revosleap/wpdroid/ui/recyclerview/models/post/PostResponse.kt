@@ -30,8 +30,6 @@ data class PostResponse(
     var link: String?,
     @SerializedName("_links")
     var links: Links?,
-    @SerializedName("meta")
-    var meta: Meta?,
     @SerializedName("modified")
     var modified: String?,
     @SerializedName("modified_gmt")
@@ -53,7 +51,7 @@ data class PostResponse(
     @SerializedName("type")
     var type: String?
 ) {
-    constructor() : this(null,null,null,null,null,null,null,
+    constructor() : this(null,null,null,null,null,null,
         null,null,null,null,null,null,null,
         null,null,null,null,null,null,null,
         null,null,null)
