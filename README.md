@@ -1,9 +1,9 @@
 # WpDroid
 Wordpress to android using wordpress API
 # Headline
-Android app using wordpress api. 
-Typically works on any wordpress site.
-## Status 
+Android app using Wordpress api.
+Typically works on any Wordpress site with few or no tweaks.
+## Status
 Still under construction
 
 License
