@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.drakeet.multitype.ItemViewBinder
 import com.revosleap.wpdroid.R
@@ -20,26 +21,35 @@ import org.sufficientlysecure.htmltextview.HtmlTextView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
-class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(),AnkoLogger {
+class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(), AnkoLogger {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): BlogItemView {
         return BlogItemView(inflater.inflate(R.layout.item_posts, parent, false))
     }
+
     override fun onBindViewHolder(holder: BlogItemView, item: PostResponse) {
         holder.bind(item)
 
     }
 
-    class BlogItemView(itemView: View) : RecyclerView.ViewHolder(itemView),AnkoLogger {
+    class BlogItemView(itemView: View) : RecyclerView.ViewHolder(itemView), AnkoLogger {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewPost)
         val title: HtmlTextView = itemView.findViewById(R.id.textViewPostTitle)
+        val info: TextView = itemView.findViewById(R.id.textViewTimeInfo)
+
         fun bind(postResponse: PostResponse) {
             title.setHtml(postResponse.title?.rendered!!)
             getImage(postResponse.featuredMedia!!)
             itemView.setOnClickListener {
                 itemView.context.startActivity<ScrollingActivity>(Utilities.BLOG_ID to postResponse.id)
             }
+            val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+            val sdfInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val date = sdfInput.parse(postResponse.dateGmt)
+            info.text = sdf.format(date)
         }
 
         private fun getImage(id: Long) {
@@ -63,6 +73,5 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(),A
             })
         }
     }
-    //https://www.tecmint.com/wp-json/wp/v2/categories/408
-    //https://www.tecmint.com/wp-json/wp/v2/categories/687
+
 }
