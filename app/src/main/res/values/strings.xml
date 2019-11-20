@@ -22,4 +22,25 @@
     <string name="retry">Retry</string>
     <string name="author_posts">Author Posts</string>
     <string name="post_error">Error Occurred While Getting The Post</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="post_limit">post_limit</string>
+    <string name="comment_limit">comment_limit</string>
+    <string name="tag_limit">tag_limit</string>
+    <string name="use_ssl">use_ssl</string>
+    <string name="picture_blur">picture_blur</string>
 </resources>

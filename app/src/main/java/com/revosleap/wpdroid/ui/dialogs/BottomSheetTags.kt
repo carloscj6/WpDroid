@@ -13,6 +13,7 @@ import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewTag
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
 import com.revosleap.wpdroid.utils.callbacks.TagSelected
+import com.revosleap.wpdroid.utils.misc.PreferenceLoader
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -24,12 +25,13 @@ import retrofit2.Response
 class BottomSheetTags : BottomSheetDialogFragment(), TagSelected {
     private val itemViewTag = ItemViewTag()
     private val tagAdapter = WpDroidAdapter()
-
+    private lateinit var preferenceLoader:PreferenceLoader
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        preferenceLoader= PreferenceLoader(context!!)
         itemViewTag.setTagClick(this)
         tagAdapter.register(itemViewTag)
         return inflater.inflate(R.layout.tag_layout, container, false)
@@ -65,7 +67,7 @@ class BottomSheetTags : BottomSheetDialogFragment(), TagSelected {
     private fun getTags(page: Long) {
         val wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
-        val call = wpDataService?.getWpTags(70, page)
+        val call = wpDataService?.getWpTags(preferenceLoader.tagLimit, page)
         call?.enqueue(object : Callback<List<TagResponse>> {
             override fun onFailure(call: Call<List<TagResponse>>, t: Throwable) {
                 if (page == 1L) {

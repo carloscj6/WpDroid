@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.dialogs.BottomSheetTags
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
@@ -19,14 +17,16 @@ import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewCategory
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
-import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.callbacks.CategorySelection
+import com.revosleap.wpdroid.utils.misc.PreferenceLoader
+import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.warn
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(),
     private var toggle: ActionBarDrawerToggle? = null
     var wpDataService: GetWpDataService? = null
     val itemViewCategory = ItemViewCategory()
+    lateinit var preferenceLoader:PreferenceLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
         wpDroidAdapter.register(ItemViewBlog())
         categoryAdapter.register(itemViewCategory)
+        preferenceLoader= PreferenceLoader(this)
         wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         loadUI()
@@ -71,6 +73,9 @@ class MainActivity : AppCompatActivity(),
             R.id.action_tags -> {
                 BottomSheetTags().show(supportFragmentManager, "Tags")
             }
+            R.id.action_settings->{
+                startActivity<SettingsActivity>()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -78,11 +83,6 @@ class MainActivity : AppCompatActivity(),
 
     private fun loadUI() {
         itemViewCategory.setCategorySelection(this)
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Refreshing...", Snackbar.LENGTH_LONG)
-                .setAction("Stop", null).show()
-        }
 
         toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open
@@ -134,10 +134,10 @@ class MainActivity : AppCompatActivity(),
         }
         val call: Call<List<PostResponse>>? = if (categoryId == null) {
             selectCategoryId = null
-            wpDataService?.getWpPosts(20, page)
+            wpDataService?.getWpPosts(preferenceLoader.postLimit, page)
         } else {
             selectCategoryId = categoryId
-            wpDataService?.getWpPostsCategorized(categoryId, 20, page)
+            wpDataService?.getWpPostsCategorized(categoryId, preferenceLoader.postLimit, page)
         }
 
         call?.enqueue(object : Callback<List<PostResponse>> {
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity(),
                         textViewOops.text =
                             "Request is Successful but there seems to be problem with getting posts"
                         updateUi(Utilities.ERROR)
-                        buttonRetry.visibility= View.GONE
+                        buttonRetry.visibility = View.GONE
                     }
 
                 }
@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getCategories(page: Long) {
-        val call = wpDataService?.getWpCategories(30, page, true)
+        val call = wpDataService?.getWpCategories(preferenceLoader.postLimit, page, true)
         call?.enqueue(object : Callback<List<CategoryResponse>> {
             override fun onFailure(call: Call<List<CategoryResponse>>, t: Throwable) {
 
@@ -241,7 +241,7 @@ class MainActivity : AppCompatActivity(),
         }
         buttonRetry?.setOnClickListener {
             getCategories(1)
-            getPosts(1,null)
+            getPosts(1, null)
         }
     }
 }

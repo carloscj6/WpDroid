@@ -11,6 +11,7 @@ import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.user.UserResponse
+import com.revosleap.wpdroid.utils.misc.PreferenceLoader
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -25,9 +26,11 @@ import retrofit2.Response
 class AuthorActivity : AppCompatActivity(),AnkoLogger {
     private var wpDataService: GetWpDataService? = null
     private val authorAdapter = WpDroidAdapter()
+    lateinit var preferenceLoader:PreferenceLoader
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_author)
+        preferenceLoader= PreferenceLoader(this)
         wpDataService = RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         instantiateRV()
         getAuthor()
@@ -61,7 +64,7 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
 
     fun getAuthorPosts(page: Long) {
         val authorId = intent.extras?.getLong(Utilities.AUTHOR_ID)
-        val call = wpDataService?.getAuthorPosts(authorId!!, 30, page)
+        val call = wpDataService?.getAuthorPosts(authorId!!, preferenceLoader.postLimit, page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
                 warn("failed getting posts \n ${t.message} \n${call.request().url()}")
@@ -76,7 +79,7 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
                     recyclerViewAuthorPosts?.visibility= View.VISIBLE
                     authorAdapter.addItems(response.body()!!)
                 }
-                warn("Success \n${call.request().url()}")
+                warn("Success \n${call.request().url()} \n ${response.body()?.size}")
             }
         })
     }

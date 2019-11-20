@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:key="@string/use_ssl"
+        android:title="Connect Securely"
+        android:defaultValue="true"
+        android:summaryOff="Server Connection encryption off (Discouraged)"
+        app:summaryOn="All connections secure"/>
+
+    <SeekBarPreference
+        app:key="@string/post_limit"
+        app:title="Posts per Request"
+        app:summary="Fewer posts result to better performance"
+        app:defaultValue="20"
+        android:max="60"
+        app:min="10"
+        app:showSeekBarValue="true"
+        />
+    <SeekBarPreference
+        app:key="@string/comment_limit"
+        app:title="Comments per Request"
+        app:summary="Fewer comments improve your reading experience"
+        app:defaultValue="10"
+        app:showSeekBarValue="true"
+        android:max="50"
+        app:min="5"
+        />
+    <SeekBarPreference
+        app:key="@string/tag_limit"
+        app:title="Tags per Request"
+        app:summary="Fewer posts result to better performance"
+        app:defaultValue="30"
+        app:showSeekBarValue="true"
+        android:max="90"
+        app:min="10"
+        />
 
 </PreferenceScreen>

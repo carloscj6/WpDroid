@@ -28,7 +28,8 @@ interface GetWpDataService {
     fun getWpUser(@Path("id") userId: Long): Call<UserResponse>
 
     @GET("comments")
-    fun getWpPostComments(@Query("post")postId:Long):Call<List<CommentResponse>>
+    fun getWpPostComments(@Query("post")postId:Long, @Query("per_page")
+    commentCount:Int,@Query("page")page:Long):Call<List<CommentResponse>>
 
     @GET("posts/")
     fun getWpPosts(

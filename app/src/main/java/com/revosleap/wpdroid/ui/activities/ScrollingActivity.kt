@@ -13,9 +13,11 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.dialogs.BottomSheetItems
+import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewComment
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
@@ -25,6 +27,7 @@ import com.revosleap.wpdroid.ui.recyclerview.models.misc.ParentComment
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.user.UserResponse
+import com.revosleap.wpdroid.utils.misc.PreferenceLoader
 import com.revosleap.wpdroid.utils.misc.UtilFun
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
@@ -47,6 +50,9 @@ import java.util.*
 class ScrollingActivity : AppCompatActivity(), AnkoLogger {
     private var wpDataService: GetWpDataService? = null
     private val commentAdapter = WpDroidAdapter()
+    private var postId= 0L
+    lateinit var preferenceLoader:PreferenceLoader
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scrolling)
@@ -54,6 +60,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         commentAdapter.register(ItemViewComment())
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        preferenceLoader= PreferenceLoader(this)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -62,10 +69,12 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         getPost()
         val image = BitmapFactory.decodeResource(resources, R.drawable.blog_item_placeholder)
-        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, 10))
+        warn(preferenceLoader.blurRadius)
+        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, preferenceLoader.blurRadius))
         buttonRetry.setOnClickListener {
             getPost()
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -86,7 +95,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun getPost() {
-        val postId = intent.getLongExtra(Utilities.BLOG_ID, 0)
+        postId = intent.getLongExtra(Utilities.BLOG_ID, 0)
         val call = wpDataService?.getWpPost(postId)
 
         call?.enqueue(object : Callback<PostResponse> {
@@ -111,7 +120,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 val date = sdfInput.parse(post.dateGmt!!)
                 textViewPostDate.text = sdf.format(date)
                 getAuthor(post.author!!)
-                getPostComments(post.id!!)
+                getPostComments(1)
             }
 
         })
@@ -143,7 +152,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                             UtilFun.blurred(
                                 this@ScrollingActivity,
                                 bitmap!!,
-                                20
+                                preferenceLoader.blurRadius
                             )
                         )
                     }
@@ -167,7 +176,6 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 call: Call<CategoryResponse>,
                 response: Response<CategoryResponse>
             ) {
-                warn(call.request().url().toString())
                 setCategoryView(response.body())
             }
         })
@@ -219,8 +227,8 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         })
     }
 
-    private fun getPostComments(id: Long) {
-        val call = wpDataService?.getWpPostComments(id)
+    private fun getPostComments(page:Long) {
+        val call = wpDataService?.getWpPostComments(postId,preferenceLoader.commentLimit,page)
         call?.enqueue(object : Callback<List<CommentResponse>> {
             override fun onFailure(call: Call<List<CommentResponse>>, t: Throwable) {
                 warn(t.message)
@@ -233,9 +241,9 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                 response: Response<List<CommentResponse>>
             ) {
                 if (response.isSuccessful) {
-                    if (response.body()?.size != null && response.body()?.size!! > 0) {
+                    if (response.body()?.size != null && response.body()?.size!! > 0 ) {
                         getComments(response.body())
-                    } else {
+                    } else if (page ==1L) {
                         val error = "This post has no comments"
                         progressBarComments.visibility = View.GONE
                         textViewCommentError.visibility = View.VISIBLE
@@ -276,10 +284,17 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         progressBarComments.visibility = View.GONE
         textViewCommentError.visibility = View.GONE
         recyclerViewComments.visibility = View.VISIBLE
-
+        val manager= LinearLayoutManager(this)
         recyclerViewComments.apply {
+
             adapter = commentAdapter
-            layoutManager = LinearLayoutManager(this@ScrollingActivity)
+            layoutManager = manager
+            addOnScrollListener(object: RecyclerViewPagination(manager){
+                override fun onLoadMore(page: Long, totalItemsCount: Int, view: RecyclerView) {
+                    getPostComments(page)
+                }
+
+            })
 
         }
         commentAdapter.addItems(parentComments)

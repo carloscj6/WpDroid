@@ -1,5 +1,7 @@
 package com.revosleap.wpdroid.ui.recyclerview.itemViews
 
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,11 +34,14 @@ class ItemViewCategory : ItemViewBinder<CategoryResponse, ItemViewCategory.Categ
     }
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), AnkoLogger {
-        private var categoryText: HtmlTextView = itemView.findViewById(R.id.textViewCategoryList)
+        private var categoryText:TextView = itemView.findViewById(R.id.textViewCategoryList)
         fun bind(categoryResponse: CategoryResponse) {
             val name = categoryResponse.name
             val category = name?.substring(0,1)?.toUpperCase(Locale.getDefault()) + name?.substring(1)
-            categoryText.setHtml(category)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                categoryText.text = Html.fromHtml(category,Html.FROM_HTML_MODE_COMPACT)
+            } else categoryText.text = Html.fromHtml(category)
+
             itemView.setOnClickListener {
                 categorySelection?.onCategorySelected(categoryResponse.id!!)
             }

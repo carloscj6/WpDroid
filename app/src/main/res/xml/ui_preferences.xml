@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SeekBarPreference
+        app:key="@string/picture_blur"
+        app:title="Header Image Blur"
+        app:summary="Blur on post image header"
+        app:defaultValue="20"
+        app:showSeekBarValue="true"
+        android:max="25"
+        app:min="10"
+        />
 </PreferenceScreen>

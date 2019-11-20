@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <org.sufficientlysecure.htmltextview.HtmlTextView
+        <TextView
             android:padding="4dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -21,7 +21,6 @@
             app:layout_constraintEnd_toStartOf="@id/imageViewCategoryIc"
             android:textStyle="bold"
             android:textSize="16sp"
-
             android:gravity="center_vertical"
             tools:text="Music"
             android:id="@+id/textViewCategoryList"/>
