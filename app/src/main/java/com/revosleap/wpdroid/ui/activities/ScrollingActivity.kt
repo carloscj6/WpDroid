@@ -96,6 +96,12 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
+
     private fun getPost() {
         postId = intent.getLongExtra(Utilities.BLOG_ID, 0)
         val call = wpDataService?.getWpPost(postId)

@@ -1,5 +1,6 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -53,7 +54,7 @@ class SettingsActivity : AppCompatActivity(),
     override fun onSupportNavigateUp(): Boolean {
         if (supportFragmentManager.popBackStackImmediate()) {
             return true
-        }
+        } else super.onBackPressed()
         return super.onSupportNavigateUp()
     }
 
@@ -78,6 +79,8 @@ class SettingsActivity : AppCompatActivity(),
         title = pref.title
         return true
     }
+
+
 
     class HeaderFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
