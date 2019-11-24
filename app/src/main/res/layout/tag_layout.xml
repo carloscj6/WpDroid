@@ -5,11 +5,11 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:minHeight="150dp">
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:title="@string/tags"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:elevation="2dp"
         android:fadingEdgeLength="1dp"
         android:id="@+id/toolbarTags"/>

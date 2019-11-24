@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.RedTheme">
+        <item name="colorPrimary">#f44336</item>
+        <item name="colorPrimaryDark">#ba000d</item>
+        <item name="colorAccent">#ff1744</item>
+        <item name="android:name">red</item>
+    </style>
+
+    <style name="AppTheme.PinkTheme">
+        <item name="colorPrimary">#e91e63</item>
+        <item name="colorPrimaryDark">#b0003a</item>
+        <item name="colorAccent">#f50057</item>
+
+    </style>
+
+    <style name="AppTheme.PurpleTheme">
+        <item name="colorPrimary">#9c27b0</item>
+        <item name="colorPrimaryDark">#6a0080</item>
+        <item name="colorAccent">#d500f9</item>
+
+    </style>
+
+    <style name="AppTheme.DeepPurpleTheme">
+        <item name="colorPrimary">#673ab7</item>
+        <item name="colorPrimaryDark">#320b86</item>
+        <item name="colorAccent">#651fff</item>
+    </style>
+
+    <style name="AppTheme.IndigoTheme">
+        <item name="colorPrimary">#3f51b5</item>
+        <item name="colorPrimaryDark">#002984</item>
+        <item name="colorAccent">#3d5afe</item>
+    </style>
+
+    <style name="AppTheme.BlueTheme">
+        <item name="colorPrimary">#2196f3</item>
+        <item name="colorPrimaryDark">#0069c0</item>
+        <item name="colorAccent">#2979ff</item>
+    </style>
+
+    <style name="AppTheme.LightBlueTheme">
+        <item name="colorPrimary">#03a9f4</item>
+        <item name="colorPrimaryDark">#007ac1</item>
+        <item name="colorAccent">#00b0ff</item>
+    </style>
+
+    <style name="AppTheme.CyanTheme">
+        <item name="colorPrimary">#00bcd4</item>
+        <item name="colorPrimaryDark">#008ba3</item>
+        <item name="colorAccent">#00e5ff</item>
+    </style>
+
+    <style name="AppTheme.TealTheme">
+        <item name="colorPrimary">#009688</item>
+        <item name="colorPrimaryDark">#00675b</item>
+        <item name="colorAccent">#1de9b6</item>
+    </style>
+
+    <style name="AppTheme.GreenTheme">
+        <item name="colorPrimary">#4caf50</item>
+        <item name="colorPrimaryDark">#087f23</item>
+        <item name="colorAccent">#00e676</item>
+    </style>
+
+    <style name="AppTheme.LightGreenTheme">
+        <item name="colorPrimary">#8bc34a</item>
+        <item name="colorPrimaryDark">#5a9216</item>
+        <item name="colorAccent">#76ff03</item>
+    </style>
+
+    <style name="AppTheme.LimeTheme">
+        <item name="colorPrimary">#cddc39</item>
+        <item name="colorPrimaryDark">#99aa00</item>
+        <item name="colorAccent">#c6ff00</item>
+    </style>
+
+    <style name="AppTheme.YellowTheme">
+        <item name="colorPrimary">#ffeb3b</item>
+        <item name="colorPrimaryDark">#c8b900</item>
+        <item name="colorAccent">#ffea00</item>
+    </style>
+
+    <style name="AppTheme.AmberTheme">
+        <item name="colorPrimary">#ffc107</item>
+        <item name="colorPrimaryDark">#c79100</item>
+        <item name="colorAccent">#ffc400</item>
+    </style>
+
+    <style name="AppTheme.OrangeTheme">
+        <item name="colorPrimary">#ff9800</item>
+        <item name="colorPrimaryDark">#c66900</item>
+        <item name="colorAccent">#ff9100</item>
+    </style>
+
+    <style name="AppTheme.DeepOrangeTheme">
+        <item name="colorPrimary">#ff5722</item>
+        <item name="colorPrimaryDark">#c41c00</item>
+        <item name="colorAccent">#ff3d00</item>
+    </style>
+
+    <style name="AppTheme.BrownTheme">
+        <item name="colorPrimary">#795548</item>
+        <item name="colorPrimaryDark">#4b2c20</item>
+        <item name="colorAccent">#c51162</item>
+    </style>
+
+    <style name="AppTheme.GreyTheme">
+        <item name="colorPrimary">#9e9e9e</item>
+        <item name="colorPrimaryDark">#707070</item>
+        <item name="colorAccent">#ff4081</item>
+    </style>
+
+    <style name="AppTheme.BlueGreyTheme">
+        <item name="colorPrimary">#607d8b</item>
+        <item name="colorPrimaryDark">#34515e</item>
+        <item name="colorAccent">#ff4081</item>
+
+    </style>
+</resources>

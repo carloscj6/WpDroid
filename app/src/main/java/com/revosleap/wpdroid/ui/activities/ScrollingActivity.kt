@@ -28,6 +28,7 @@ import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.tags.TagResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.user.UserResponse
 import com.revosleap.wpdroid.utils.misc.PreferenceLoader
+import com.revosleap.wpdroid.utils.misc.Themer
 import com.revosleap.wpdroid.utils.misc.UtilFun
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
@@ -55,6 +56,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Themer(this).setTheme()
         setContentView(R.layout.activity_scrolling)
         setSupportActionBar(toolbar)
         commentAdapter.register(ItemViewComment())

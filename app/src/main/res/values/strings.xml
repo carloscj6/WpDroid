@@ -43,4 +43,7 @@
     <string name="tag_limit">tag_limit</string>
     <string name="use_ssl">use_ssl</string>
     <string name="picture_blur">picture_blur</string>
+    <string name="accent_color">accent_color</string>
+    <string name="pick_color">Theme your App</string>
+    <string name="theme_color">theme_color</string>
 </resources>

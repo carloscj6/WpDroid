@@ -46,6 +46,8 @@ class BottomSheetTags : BottomSheetDialogFragment(), TagSelected {
         BottomSheetItems.getInstance(tagResponse.id!!, Utilities.ITEM_TAG).show(activity?.supportFragmentManager!!,"Tags")
     }
 
+
+
     private fun instantiateViews() {
         val gridLayoutManager = GridLayoutManager(context, 3)
         recyclerViewItems.apply {

@@ -1,19 +1,31 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.utils.misc.PreferenceLoader
+import com.revosleap.wpdroid.utils.misc.Themer
+import kotlinx.android.synthetic.main.settings_activity.*
 
 private const val TITLE_TAG = "settingsActivityTitle"
 
 class SettingsActivity : AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback,
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Themer(this).setTheme()
         setContentView(R.layout.settings_activity)
+        setSupportActionBar(settingsToolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+       // theme.applyStyle(R.style.DefToolBar,true)
+        PreferenceLoader(this)
+
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
@@ -28,6 +40,8 @@ class SettingsActivity : AppCompatActivity(),
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val sharedPreference= PreferenceManager.getDefaultSharedPreferences(this)
+        sharedPreference.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -81,6 +95,12 @@ class SettingsActivity : AppCompatActivity(),
     class UIAppearanceFragment:PreferenceFragmentCompat(){
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.ui_preferences,rootKey)
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key?.equals(getString(R.string.theme_color))!!){
+         recreate()
         }
     }
 }

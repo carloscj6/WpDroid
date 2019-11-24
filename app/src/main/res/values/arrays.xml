@@ -9,4 +9,26 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+    <array name="accent_colors">
+        <item>@color/defaultTheme</item>
+        <item>@color/redTheme</item>
+        <item>@color/pinkTheme</item>
+        <item>@color/purpleTheme</item>
+        <item>@color/deepPurpleTheme</item>
+        <item>@color/indigoTheme</item>
+        <item>@color/blueTheme</item>
+        <item>@color/lightBlueTheme</item>
+        <item>@color/cyanTheme</item>
+        <item>@color/tealTheme</item>
+        <item>@color/greenTheme</item>
+        <item>@color/lightGreenTheme</item>
+        <item>@color/limeTheme</item>
+        <item>@color/yellowTheme</item>
+        <item>@color/amberTheme</item>
+        <item>@color/orangeTheme</item>
+        <item>@color/deepOrangeTheme</item>
+        <item>@color/brownTheme</item>
+        <item>@color/greyTheme</item>
+        <item>@color/blueGreyTheme</item>
+    </array>
 </resources>

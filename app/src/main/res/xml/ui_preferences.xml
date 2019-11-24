@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <SeekBarPreference
-        app:key="@string/picture_blur"
-        app:title="Header Image Blur"
-        app:summary="Blur on post image header"
-        app:defaultValue="20"
-        app:showSeekBarValue="true"
-        android:max="25"
-        app:min="10"
-        />
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:summary="Reading experience"
+        app:title="Blog &amp; Reading">
+        <SeekBarPreference
+            app:iconSpaceReserved="false"
+            android:max="25"
+            app:defaultValue="20"
+            app:key="@string/picture_blur"
+            app:min="10"
+            app:showSeekBarValue="true"
+            app:summary="Blur on post image header"
+            app:title="Header Image Blur" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Appearance Colors"
+        app:iconSpaceReserved="false"
+        app:summary="UI colors">
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            app:iconSpaceReserved="false"
+            app:summary="Accents"
+            app:title="Accent Color"
+            android:defaultValue="@color/defaultTheme"
+            android:key="@string/theme_color"
+            app:cpv_dialogTitle="@string/pick_color"
+            app:cpv_showColorShades="false"
+            app:cpv_allowCustom="false"
+            app:cpv_allowPresets="false"
+            app:cpv_showAlphaSlider="false"
+            app:cpv_colorPresets="@array/accent_colors"
+            />
+
+    </PreferenceCategory>
 </PreferenceScreen>

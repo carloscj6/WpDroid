@@ -12,6 +12,7 @@ import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.user.UserResponse
 import com.revosleap.wpdroid.utils.misc.PreferenceLoader
+import com.revosleap.wpdroid.utils.misc.Themer
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -29,11 +30,17 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
     lateinit var preferenceLoader:PreferenceLoader
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Themer(this).setTheme()
         setContentView(R.layout.activity_author)
         preferenceLoader= PreferenceLoader(this)
         wpDataService = RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         instantiateRV()
         getAuthor()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Themer(this).setTheme()
     }
 
     private fun getAuthor() {

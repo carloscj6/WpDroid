@@ -1,6 +1,9 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.Preference
+import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,6 +22,7 @@ import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.utils.callbacks.CategorySelection
 import com.revosleap.wpdroid.utils.misc.PreferenceLoader
+import com.revosleap.wpdroid.utils.misc.Themer
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -33,7 +37,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity(),
-    AnkoLogger, CategorySelection {
+    AnkoLogger, CategorySelection,SharedPreferences.OnSharedPreferenceChangeListener {
     private var selectCategoryId: Long? = null
     private val wpDroidAdapter = WpDroidAdapter()
     private val categoryAdapter = WpDroidAdapter()
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Themer(this).setTheme()
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         wpDroidAdapter.register(ItemViewBlog())
@@ -52,8 +57,10 @@ class MainActivity : AppCompatActivity(),
         wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         loadUI()
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
 
     }
+
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -242,6 +249,13 @@ class MainActivity : AppCompatActivity(),
         buttonRetry?.setOnClickListener {
             getCategories(1)
             getPosts(1, null)
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key?.equals(getString(R.string.theme_color))!!){
+            Themer(this).setTheme()
+            recreate()
         }
     }
 }

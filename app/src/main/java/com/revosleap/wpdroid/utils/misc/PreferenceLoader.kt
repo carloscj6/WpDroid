@@ -10,4 +10,6 @@ class PreferenceLoader(context: Context) {
     val commentLimit= manager.getInt(context.getString(R.string.comment_limit),5)
     val tagLimit= manager.getInt(context.getString(R.string.tag_limit),30)
     val blurRadius= manager.getInt(context.getString(R.string.picture_blur),20)
+    val themeColor= manager.getInt(context.getString(R.string.theme_color),0)
+   // val parsedThemeColor= manag
 }
