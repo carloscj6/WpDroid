@@ -23,8 +23,8 @@
         app:summary="UI colors">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             app:iconSpaceReserved="false"
-            app:summary="Accents"
-            app:title="Accent Color"
+            app:summary="App theme colors"
+            app:title="App Theme"
             android:defaultValue="@color/defaultTheme"
             android:key="@string/theme_color"
             app:cpv_dialogTitle="@string/pick_color"

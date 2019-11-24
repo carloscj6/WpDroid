@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent"
+    android:name="com.revosleap.wpdroid.ui.dialogs.BottomSheetDialogFragment"
     android:minHeight="150dp">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"

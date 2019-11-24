@@ -30,7 +30,7 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
     lateinit var preferenceLoader:PreferenceLoader
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Themer(this).setTheme()
+        Themer(this).setTheme()
         setContentView(R.layout.activity_author)
         preferenceLoader= PreferenceLoader(this)
         wpDataService = RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
@@ -38,10 +38,7 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
         getAuthor()
     }
 
-    override fun onResume() {
-        super.onResume()
-        Themer(this).setTheme()
-    }
+
 
     private fun getAuthor() {
         val authorId = intent.extras?.getLong(Utilities.AUTHOR_ID)
