@@ -354,8 +354,8 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         textView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         textView.text = hashTag
         view.setOnClickListener {
-            BottomSheetItems.getInstance(categoryResponse?.id!!, Utilities.ITEM_TAG)
-                .show(supportFragmentManager, "Tag")
+//            BottomSheetItems.getInstance(categoryResponse?.id!!, Utilities.ITEM_TAG)
+//                .show(supportFragmentManager, "Tag")
         }
         flowLayoutTags.addView(categoryView)
 
@@ -367,8 +367,8 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
         val textView = categoryView.findViewById<TextView>(R.id.tag_txt)
         textView.text = categoryResponse?.name!!
         view.setOnClickListener {
-            BottomSheetItems.getInstance(categoryResponse.id!!, Utilities.ITEM_CATEGORY)
-                .show(supportFragmentManager, "Cat")
+//            BottomSheetItems.getInstance(categoryResponse.id!!, Utilities.ITEM_CATEGORY)
+//                .show(supportFragmentManager, "Cat")
         }
         flowLayoutCategory.addView(categoryView)
     }

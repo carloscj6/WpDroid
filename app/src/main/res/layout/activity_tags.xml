@@ -2,64 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:name="com.revosleap.wpdroid.ui.dialogs.BottomSheetDialogFragment"
-    android:minHeight="150dp">
-    <androidx.appcompat.widget.Toolbar
+    tools:context=".ui.activities.TagActivity">
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:title="@string/tags"
-        android:background="?attr/colorPrimary"
-        android:elevation="2dp"
-        android:fadingEdgeLength="1dp"
-        android:id="@+id/toolbarTags"/>
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarTags"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/tagView"
+        android:layout_height="match_parent"/>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        android:id="@+id/recyclerViewItems"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressBarTags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-    <LinearLayout
-        android:id="@+id/linearLayoutError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/textViewTagError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableTop="@drawable/ic_error_outline_black"
-            android:drawablePadding="8dp"
-            android:text="@string/default_tag_error"
-             />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:text="@string/retry"
-            android:background="@drawable/error_button_bg"
-            android:id="@+id/buttonRetry"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center_horizontal"
-            />
-    </LinearLayout>
-
-    </FrameLayout>
 
 </LinearLayout>

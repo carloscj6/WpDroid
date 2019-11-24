@@ -33,6 +33,7 @@
             android:name=".ui.activities.ScrollingActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".ui.activities.TagActivity" />
     </application>
 
 </manifest>

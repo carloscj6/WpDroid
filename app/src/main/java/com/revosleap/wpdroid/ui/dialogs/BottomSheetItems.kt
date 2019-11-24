@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.revosleap.wpdroid.R
@@ -14,12 +15,13 @@ import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
-import kotlinx.android.synthetic.main.tag_layout.*
+import kotlinx.android.synthetic.main.activity_tags.*
+import kotlinx.android.synthetic.main.tag_list_view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BottomSheetItems : FullScreenBottomSheet() {
+class BottomSheetItems : Fragment() {
     private val itemAdapter = WpDroidAdapter()
     private var wpDataService: GetWpDataService? = null
     var id: Long? = null
@@ -41,7 +43,7 @@ class BottomSheetItems : FullScreenBottomSheet() {
     ): View? {
         itemAdapter.register(ItemViewBlog())
         wpDataService = RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
-        return inflater.inflate(R.layout.tag_layout, container, false)
+        return inflater.inflate(R.layout.tag_list_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -137,7 +139,7 @@ class BottomSheetItems : FullScreenBottomSheet() {
     }
 
     fun getTagPosts(page: Long) {
-        val call = wpDataService?.getWptTagPosts(id!!, 30)
+        val call = wpDataService?.getWptTagPosts(id!!, 30,page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
                 updateUI(Utilities.ERROR)

@@ -36,7 +36,9 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
         wpDataService = RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         instantiateRV()
         getAuthor()
+        imageButtonBack.setOnClickListener { onBackPressed() }
     }
+
 
 
 

@@ -2,7 +2,6 @@ package com.revosleap.wpdroid.ui.activities
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.Preference
 import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
@@ -13,7 +12,6 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.revosleap.wpdroid.R
-import com.revosleap.wpdroid.ui.dialogs.BottomSheetTags
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
@@ -78,7 +76,7 @@ class MainActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_tags -> {
-                BottomSheetTags().show(supportFragmentManager, "Tags")
+                startActivity<TagActivity>()
             }
             R.id.action_settings->{
                 startActivity<SettingsActivity>()
