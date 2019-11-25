@@ -1,5 +1,6 @@
 package com.revosleap.wpdroid.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.activities.TagActivity
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewTag
@@ -18,6 +20,7 @@ import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import kotlinx.android.synthetic.main.tag_list_view.*
+import org.jetbrains.anko.startActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,7 +68,9 @@ class FragmentTagList:Fragment(),TagSelected {
     }
 
     override fun onTagSelected(tagResponse: TagResponse) {
-
+       context?.startActivity<TagActivity>(Utilities.ITEM_ID_BUNDLE to tagResponse.id,
+           Utilities.ITEM_TYPE_BUNDLE to Utilities.ITEM_TAG,
+           Utilities.ITEM_TITLE_BUNDLE to tagResponse.name)
     }
 
     private fun getTags(page: Long) {

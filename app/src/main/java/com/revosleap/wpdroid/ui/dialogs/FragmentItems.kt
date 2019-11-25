@@ -1,5 +1,6 @@
 package com.revosleap.wpdroid.ui.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,32 +9,43 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.activities.TagActivity
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewBlog
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.post.Title
 import com.revosleap.wpdroid.utils.misc.Utilities
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
-import kotlinx.android.synthetic.main.activity_tags.*
 import kotlinx.android.synthetic.main.tag_list_view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.warn
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BottomSheetItems : Fragment() {
+class FragmentItems : Fragment(),AnkoLogger {
     private val itemAdapter = WpDroidAdapter()
     private var wpDataService: GetWpDataService? = null
-    var id: Long? = null
-    var itemType: String? = null
+    private var id: Long? = null
+    private var itemType: String? = null
+    private var title:String?=null
+    private var tagActivity:TagActivity?=null
 
     companion object {
-        fun getInstance(id: Long, itemType: String): BottomSheetItems {
-            val bottomSheetItems = BottomSheetItems()
+        fun getInstance(id: Long, itemType: String,title: String): FragmentItems {
+            val bottomSheetItems = FragmentItems()
             bottomSheetItems.itemType = itemType
             bottomSheetItems.id = id
+            bottomSheetItems.title= title
             return bottomSheetItems
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        tagActivity= activity as TagActivity
     }
 
     override fun onCreateView(
@@ -91,6 +103,7 @@ class BottomSheetItems : Fragment() {
     }
 
     fun getCategoryPosts(page: Long) {
+        tagActivity?.supportActionBar?.title="CATEGORY: $title"
         val call = wpDataService?.getWpPostsCategorized(id!!, 30, page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
@@ -106,15 +119,14 @@ class BottomSheetItems : Fragment() {
                     if (response.body() != null && response.body()?.size!! > 0) {
                         itemAdapter.addItems(response.body()!!)
                     }
-                } else {
-                    updateUI(Utilities.ERROR)
-                    buttonRetry.visibility = View.GONE
                 }
+
             }
         })
     }
 
     fun getAuthorPosts(page: Long) {
+        tagActivity?.supportActionBar?.title="AUTHOR: $title"
         val call = wpDataService?.getAuthorPosts(id!!, 30,page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
@@ -130,15 +142,13 @@ class BottomSheetItems : Fragment() {
                     if (response.body() != null && response.body()?.size!! > 0) {
                         itemAdapter.addItems(response.body()!!)
                     }
-                } else {
-                    updateUI(Utilities.ERROR)
-                    buttonRetry.visibility = View.GONE
                 }
             }
         })
     }
 
     fun getTagPosts(page: Long) {
+        tagActivity?.supportActionBar?.title="TAG: $title"
         val call = wpDataService?.getWptTagPosts(id!!, 30,page)
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
@@ -149,15 +159,17 @@ class BottomSheetItems : Fragment() {
                 call: Call<List<PostResponse>>,
                 response: Response<List<PostResponse>>
             ) {
+                warn("${call.request().url()}")
                 if (response.isSuccessful) {
                     updateUI(Utilities.SUCCESS)
                     if (response.body() != null && response.body()?.size!! > 0) {
                         itemAdapter.addItems(response.body()!!)
                     }
-                } else {
-                    updateUI(Utilities.ERROR)
-                    buttonRetry.visibility = View.GONE
                 }
+//                else {
+//                    updateUI(Utilities.ERROR)
+//                    buttonRetry.visibility = View.GONE
+//                }
             }
         })
     }

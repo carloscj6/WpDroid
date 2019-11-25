@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
@@ -379,34 +378,36 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
         return null
     }
 
-    fun setTagView(categoryResponse: TagResponse?) {
+    fun setTagView(tagResponse: TagResponse?) {
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         val categoryView = layoutInflater.inflate(R.layout.item_tag, view, false)
         val textView = categoryView.findViewById<TextView>(R.id.textViewHashTag)
         val frameLayoutTAG = categoryView.findViewById<FrameLayout>(R.id.frameLayoutTag)
         frameLayoutTAG.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
-        val hashTag = "#${categoryResponse?.name}"
+        val hashTag = "#${tagResponse?.name}"
         textView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, UtilFun.getTextSize())
         textView.text = hashTag
-        view.setOnClickListener {
-            //            BottomSheetItems.getInstance(categoryResponse?.id!!, Utilities.ITEM_TAG)
-//                .show(supportFragmentManager, "Tag")
+        categoryView.setOnClickListener {
+            startActivity<TagActivity>(Utilities.ITEM_ID_BUNDLE to tagResponse!!.id,
+                    Utilities.ITEM_TYPE_BUNDLE to Utilities.ITEM_TAG,
+                    Utilities.ITEM_TITLE_BUNDLE to tagResponse.name)
         }
         flowLayoutTags.addView(categoryView)
-
     }
 
-    fun setCategoryView(categoryResponse: CategoryResponse?) {
+    private fun setCategoryView(categoryResponse: CategoryResponse?) {
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         val categoryView = layoutInflater.inflate(R.layout.category_item, view, false)
         val textView = categoryView.findViewById<TextView>(R.id.tag_txt)
         textView.text = categoryResponse?.name!!
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, UtilFun.getTextSize())
-        view.setOnClickListener {
-            //            BottomSheetItems.getInstance(categoryResponse.id!!, Utilities.ITEM_CATEGORY)
-//                .show(supportFragmentManager, "Cat")
-        }
+        categoryView.setOnClickListener {
+            startActivity<TagActivity>(Utilities.ITEM_ID_BUNDLE to categoryResponse.id,
+                Utilities.ITEM_TYPE_BUNDLE to Utilities.ITEM_CATEGORY,
+                Utilities.ITEM_TITLE_BUNDLE to categoryResponse.name)
+
+    }
         flowLayoutCategory.addView(categoryView)
     }
 
