@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.drakeet.multitype.ItemViewBinder
 import com.revosleap.wpdroid.R
-import com.revosleap.wpdroid.ui.activities.ScrollingActivity
+import com.revosleap.wpdroid.ui.activities.ArticleActivity
 import com.revosleap.wpdroid.ui.recyclerview.models.media.MediaResponse
 import com.revosleap.wpdroid.ui.recyclerview.models.post.PostResponse
 import com.revosleap.wpdroid.utils.misc.Utilities
@@ -44,7 +44,7 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(), 
             title.setHtml(postResponse.title?.rendered!!)
             getImage(postResponse.featuredMedia!!)
             itemView.setOnClickListener {
-                itemView.context.startActivity<ScrollingActivity>(Utilities.BLOG_ID to postResponse.id)
+                itemView.context.startActivity<ArticleActivity>(Utilities.BLOG_ID to postResponse.id)
             }
             val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
             val sdfInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())

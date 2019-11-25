@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.revosleap.wpdroid.R
-import com.revosleap.wpdroid.ui.dialogs.BottomSheetItems
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewComment
@@ -35,8 +35,8 @@ import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import kotlinx.android.synthetic.main.activity_scrolling.*
-import kotlinx.android.synthetic.main.content_scrolling.*
+import kotlinx.android.synthetic.main.activity_article.*
+import kotlinx.android.synthetic.main.content_article.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.warn
@@ -48,21 +48,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ScrollingActivity : AppCompatActivity(), AnkoLogger {
+class ArticleActivity : AppCompatActivity(), AnkoLogger {
     private var wpDataService: GetWpDataService? = null
     private val commentAdapter = WpDroidAdapter()
     private var postId= 0L
-    lateinit var preferenceLoader:PreferenceLoader
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Themer(this).setTheme()
-        setContentView(R.layout.activity_scrolling)
+        setContentView(R.layout.activity_article)
         setSupportActionBar(toolbar)
         commentAdapter.register(ItemViewComment())
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        preferenceLoader= PreferenceLoader(this)
+
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -71,12 +71,12 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         getPost()
         val image = BitmapFactory.decodeResource(resources, R.drawable.blog_item_placeholder)
-        warn(preferenceLoader.blurRadius)
-        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, preferenceLoader.blurRadius))
+        warn(PreferenceLoader.blurRadius)
+        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, PreferenceLoader.blurRadius))
         buttonRetry.setOnClickListener {
             getPost()
         }
-
+        setViewPreferences()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -100,6 +100,11 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
+    }
+
+    private fun setViewPreferences(){
+        textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,UtilFun.getTextSize()+10)
+        textViewPost.setTextSize(TypedValue.COMPLEX_UNIT_SP,UtilFun.getTextSize())
     }
 
     private fun getPost() {
@@ -158,14 +163,14 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         imageViewHeader.setImageBitmap(
                             UtilFun.blurred(
-                                this@ScrollingActivity,
+                                this@ArticleActivity,
                                 bitmap!!,
-                                preferenceLoader.blurRadius
+                                PreferenceLoader.blurRadius
                             )
                         )
                     }
                 }
-                Picasso.with(this@ScrollingActivity).load(response.body()?.sourceUrl)
+                Picasso.with(this@ArticleActivity).load(response.body()?.sourceUrl)
                     .into(target)
 
             }
@@ -236,7 +241,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun getPostComments(page:Long) {
-        val call = wpDataService?.getWpPostComments(postId,preferenceLoader.commentLimit,page)
+        val call = wpDataService?.getWpPostComments(postId,PreferenceLoader.commentLimit,page)
         call?.enqueue(object : Callback<List<CommentResponse>> {
             override fun onFailure(call: Call<List<CommentResponse>>, t: Throwable) {
                 warn(t.message)
@@ -269,7 +274,7 @@ class ScrollingActivity : AppCompatActivity(), AnkoLogger {
 
         recyclerViewComments.apply {
             adapter = commentAdapter
-            layoutManager = LinearLayoutManager(this@ScrollingActivity)
+            layoutManager = LinearLayoutManager(this@ArticleActivity)
 
         }
         commentAdapter.addItems(getMainComments(comments))

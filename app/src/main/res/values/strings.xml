@@ -46,4 +46,5 @@
     <string name="accent_color">accent_color</string>
     <string name="pick_color">Theme your App</string>
     <string name="theme_color">theme_color</string>
+    <string name="text_scaling">text_scaling</string>
 </resources>

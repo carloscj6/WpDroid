@@ -7,6 +7,23 @@
         app:title="Blog &amp; Reading">
         <SeekBarPreference
             app:iconSpaceReserved="false"
+            app:key="@string/text_scaling"
+            app:title="Text Size"
+            app:summary="Article text size"
+            app:defaultValue="1"
+            android:max="10"
+            app:min="1"
+            app:showSeekBarValue="true"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Appearance Colors"
+        app:iconSpaceReserved="false"
+        app:summary="UI colors">
+        <SeekBarPreference
+            app:iconSpaceReserved="false"
             android:max="25"
             app:defaultValue="20"
             app:key="@string/picture_blur"
@@ -15,12 +32,6 @@
             app:summary="Blur on post image header"
             app:title="Header Image Blur" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="Appearance Colors"
-        app:iconSpaceReserved="false"
-        app:summary="UI colors">
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             app:iconSpaceReserved="false"
             app:summary="App theme colors"

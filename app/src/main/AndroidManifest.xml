@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.ScrollingActivity"
+            android:name=".ui.activities.ArticleActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".ui.activities.TagActivity" />

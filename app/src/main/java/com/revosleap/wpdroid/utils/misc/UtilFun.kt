@@ -6,6 +6,7 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import kotlin.math.roundToInt
 
 object UtilFun {
 
@@ -46,5 +47,14 @@ object UtilFun {
         val result = Bitmap.createBitmap(img.width, img.height, Bitmap.Config.ARGB_8888)
         result.setPixels(pixels, 0, result.width, 0, 0, result.width, result.height)
         return result
+    }
+
+    fun getTextSize():Float{
+        val defaultSize= 12
+        val scaling= PreferenceLoader.textScaling
+        if (scaling==1){
+            return defaultSize.toFloat()
+        }
+        else return (defaultSize*scaling*0.5).toFloat()
     }
 }
