@@ -16,7 +16,7 @@ class Themer(private val application: Application?,private val appCompatActivity
 
     fun setTheme() {
         var selectedColor=0
-        val selectedTheme = PreferenceLoader.themeColor
+        val selectedTheme = PreferenceLoader(context).themeColor
         if (selectedTheme!=0){
            selectedColor = selectedTheme
         }

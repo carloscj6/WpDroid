@@ -52,7 +52,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
     private var wpDataService: GetWpDataService? = null
     private val commentAdapter = WpDroidAdapter()
     private var postId= 0L
-
+    private lateinit var preferenceLoader: PreferenceLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +62,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         commentAdapter.register(ItemViewComment())
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
+        preferenceLoader= PreferenceLoader(this)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -71,8 +71,8 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         getPost()
         val image = BitmapFactory.decodeResource(resources, R.drawable.blog_item_placeholder)
-        warn(PreferenceLoader.blurRadius)
-        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, PreferenceLoader.blurRadius))
+        warn(preferenceLoader.blurRadius)
+        imageViewHeader.setImageBitmap(UtilFun.blurred(this, image, preferenceLoader.blurRadius))
         buttonRetry.setOnClickListener {
             getPost()
         }
@@ -165,7 +165,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
                             UtilFun.blurred(
                                 this@ArticleActivity,
                                 bitmap!!,
-                                PreferenceLoader.blurRadius
+                                preferenceLoader.blurRadius
                             )
                         )
                     }
@@ -241,7 +241,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun getPostComments(page:Long) {
-        val call = wpDataService?.getWpPostComments(postId,PreferenceLoader.commentLimit,page)
+        val call = wpDataService?.getWpPostComments(postId,preferenceLoader.commentLimit,page)
         call?.enqueue(object : Callback<List<CommentResponse>> {
             override fun onFailure(call: Call<List<CommentResponse>>, t: Throwable) {
                 warn(t.message)

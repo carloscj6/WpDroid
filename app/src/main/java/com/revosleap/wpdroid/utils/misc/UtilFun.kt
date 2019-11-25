@@ -6,6 +6,7 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import com.revosleap.wpdroid.WpDroid
 import kotlin.math.roundToInt
 
 object UtilFun {
@@ -51,10 +52,9 @@ object UtilFun {
 
     fun getTextSize():Float{
         val defaultSize= 12
-        val scaling= PreferenceLoader.textScaling
-        if (scaling==1){
-            return defaultSize.toFloat()
-        }
-        else return (defaultSize*scaling*0.5).toFloat()
+        val scaling= PreferenceLoader(WpDroid.context!!).textScaling
+        return if (scaling==1){
+            defaultSize.toFloat()
+        } else (defaultSize*scaling*0.5).toFloat()
     }
 }
