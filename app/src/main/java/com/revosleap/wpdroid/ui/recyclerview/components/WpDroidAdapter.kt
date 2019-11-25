@@ -14,6 +14,11 @@ class WpDroidAdapter : MultiTypeAdapter(),AnkoLogger {
         notifyDataSetChanged()
     }
 
+    fun addManyItems(itemList: List<Any>){
+        items= itemList
+        notifyDataSetChanged()
+    }
+
     fun appendItems(itemList: MutableList<Any>) {
         adapterItems.addAll(itemList)
         items = adapterItems

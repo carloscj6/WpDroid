@@ -15,5 +15,11 @@
         app:summary="App look and feel"
         app:key="app_appearance"
         app:title="Appearance"/>
+    <Preference
+        app:fragment="com.revosleap.wpdroid.ui.activities.SettingsActivity$WebFragment"
+        app:icon="@drawable/ic_web"
+        app:summary="App sites"
+        app:key="app_appearance"
+        app:title="Sites"/>
 
 </PreferenceScreen>

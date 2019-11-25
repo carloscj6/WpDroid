@@ -60,7 +60,7 @@ class ItemViewComment : ItemViewBinder<ParentComment, ItemViewComment.CommentHol
                 layoutManager= LinearLayoutManager(this.context)
                 hasFixedSize()
             }
-           childAdapter.addItems(commentResponse.comments!!)
+           childAdapter.addManyItems(commentResponse.comments!!)
         }
     }
 }

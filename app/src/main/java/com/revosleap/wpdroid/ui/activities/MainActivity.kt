@@ -35,14 +35,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity(),
-    AnkoLogger, CategorySelection,SharedPreferences.OnSharedPreferenceChangeListener {
+    AnkoLogger, CategorySelection, SharedPreferences.OnSharedPreferenceChangeListener {
     private var selectCategoryId: Long? = null
     private val wpDroidAdapter = WpDroidAdapter()
     private val categoryAdapter = WpDroidAdapter()
     private var toggle: ActionBarDrawerToggle? = null
     var wpDataService: GetWpDataService? = null
     val itemViewCategory = ItemViewCategory()
-    lateinit var preferenceLoader:PreferenceLoader
+    lateinit var preferenceLoader: PreferenceLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +51,12 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
         wpDroidAdapter.register(ItemViewBlog())
         categoryAdapter.register(itemViewCategory)
-        preferenceLoader= PreferenceLoader(this)
+        preferenceLoader = PreferenceLoader(this)
         wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         loadUI()
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .registerOnSharedPreferenceChangeListener(this)
 
     }
 
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity(),
             R.id.action_tags -> {
                 startActivity<TagActivity>()
             }
-            R.id.action_settings->{
+            R.id.action_settings -> {
                 startActivity<SettingsActivity>()
             }
         }
@@ -251,9 +252,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key?.equals(getString(R.string.theme_color))!!){
+        if (key?.equals(getString(R.string.theme_color))!!) {
             Themer(this).setTheme()
             recreate()
+        } else if (key == getString(R.string.app_sites)||key == getString(R.string.input_site)
+            ||key == getString(R.string.use_custom_site)) {
+
+            getPosts(1, null)
+            getCategories(1)
         }
     }
 }

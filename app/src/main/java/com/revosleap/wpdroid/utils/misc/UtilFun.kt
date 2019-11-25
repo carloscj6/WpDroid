@@ -53,8 +53,20 @@ object UtilFun {
     fun getTextSize():Float{
         val defaultSize= 12
         val scaling= PreferenceLoader(WpDroid.context!!).textScaling
-        return if (scaling==1){
-            defaultSize.toFloat()
-        } else (defaultSize*scaling*0.5).toFloat()
+        return (defaultSize*scaling*0.4).toFloat()
+    }
+
+    fun getUrlBaseUrl():String{
+        val url:String
+        val siteUrl= PreferenceLoader(WpDroid.context!!).url
+        val encrypt= PreferenceLoader(WpDroid.context!!).useSSl
+        val customSite= PreferenceLoader(WpDroid.context!!).inputedSite
+        val allowCustomSite= PreferenceLoader(WpDroid.context!!).allowCustomSite
+        url = if (allowCustomSite){
+            customSite!!
+        }else siteUrl!!
+        return if (encrypt){
+            "https://${url}/wp-json/wp/v2/"
+        }else "http://${url}/wp-json/wp/v2/"
     }
 }

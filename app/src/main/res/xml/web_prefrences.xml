@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="Websites"
+        app:iconSpaceReserved="false"
+        android:summary="Available Sites">
+        <ListPreference
+            android:title="Site"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"
+            android:key="@string/app_sites"
+            android:entries="@array/sites_entries"
+            android:entryValues="@array/sites_values"
+            android:defaultValue="tecmint.com"
+            />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Custom Site"
+        android:summary="Your custom site"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:key="@string/use_custom_site"
+            android:title="Use Your Custom Site"
+            android:defaultValue="false"
+            android:summaryOff="Using default sites"
+            app:summaryOn="Using custom site"/>
+        <EditTextPreference
+            android:dependency="@string/use_custom_site"
+            android:title="Enter your site"
+            android:summary="Enter in form of 'example.com'"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false"
+            android:key="@string/input_site"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

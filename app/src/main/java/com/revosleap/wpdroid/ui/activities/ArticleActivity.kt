@@ -1,5 +1,6 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Paint
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -48,10 +50,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ArticleActivity : AppCompatActivity(), AnkoLogger {
+class ArticleActivity : AppCompatActivity(), AnkoLogger,
+    SharedPreferences.OnSharedPreferenceChangeListener {
     private var wpDataService: GetWpDataService? = null
     private val commentAdapter = WpDroidAdapter()
-    private var postId= 0L
+    private var postId = 0L
     private lateinit var preferenceLoader: PreferenceLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +65,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         commentAdapter.register(ItemViewComment())
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        preferenceLoader= PreferenceLoader(this)
+        preferenceLoader = PreferenceLoader(this)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -77,6 +80,8 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
             getPost()
         }
         setViewPreferences()
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -90,10 +95,11 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.action_settings -> startActivity<SettingsActivity>()
+
         }
+        return super.onOptionsItemSelected(item)
     }
 
 
@@ -102,9 +108,17 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         return super.onSupportNavigateUp()
     }
 
-    private fun setViewPreferences(){
-        textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,UtilFun.getTextSize()+10)
-        textViewPost.setTextSize(TypedValue.COMPLEX_UNIT_SP,UtilFun.getTextSize())
+    private fun setViewPreferences() {
+        val textSize = UtilFun.getTextSize()
+        textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 10)
+        textViewPost.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+        textViewPostDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 6)
+        textViewAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 6)
+        textViewComments.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 4)
+        textViewTags.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 4)
+        textViewCommentError.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize - 2)
+        textViewPost.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            preferenceLoader.lineSpacing.toFloat(),resources.displayMetrics),1f)
     }
 
     private fun getPost() {
@@ -222,15 +236,15 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
                 call: Call<UserResponse>,
                 response: Response<UserResponse>
             ) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     textViewAuthor.setHtml(response.body()?.name!!)
                     textViewAuthor?.setOnClickListener {
                         startActivity<AuthorActivity>(Utilities.AUTHOR_ID to response.body()?.id)
                     }
                     updateUI(Utilities.SUCCESS)
-                }else{
+                } else {
                     updateUI(Utilities.ERROR)
-                    buttonRetry.text="Quit"
+                    buttonRetry.text = "Quit"
                     buttonRetry.setOnClickListener {
                         finish()
                     }
@@ -240,8 +254,8 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         })
     }
 
-    private fun getPostComments(page:Long) {
-        val call = wpDataService?.getWpPostComments(postId,preferenceLoader.commentLimit,page)
+    private fun getPostComments(page: Long) {
+        val call = wpDataService?.getWpPostComments(postId, preferenceLoader.commentLimit, page)
         call?.enqueue(object : Callback<List<CommentResponse>> {
             override fun onFailure(call: Call<List<CommentResponse>>, t: Throwable) {
                 warn(t.message)
@@ -254,9 +268,9 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
                 response: Response<List<CommentResponse>>
             ) {
                 if (response.isSuccessful) {
-                    if (response.body()?.size != null && response.body()?.size!! > 0 ) {
+                    if (response.body()?.size != null && response.body()?.size!! > 0) {
                         getComments(response.body())
-                    } else if (page ==1L) {
+                    } else if (page == 1L) {
                         val error = "This post has no comments"
                         progressBarComments.visibility = View.GONE
                         textViewCommentError.visibility = View.VISIBLE
@@ -277,7 +291,8 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
             layoutManager = LinearLayoutManager(this@ArticleActivity)
 
         }
-        commentAdapter.addItems(getMainComments(comments))
+
+        commentAdapter.addManyItems(getMainComments(comments))
     }
 
     private fun getComments(comments: List<CommentResponse>?) {
@@ -297,12 +312,12 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         progressBarComments.visibility = View.GONE
         textViewCommentError.visibility = View.GONE
         recyclerViewComments.visibility = View.VISIBLE
-        val manager= LinearLayoutManager(this)
+        val manager = LinearLayoutManager(this)
         recyclerViewComments.apply {
 
             adapter = commentAdapter
             layoutManager = manager
-            addOnScrollListener(object: RecyclerViewPagination(manager){
+            addOnScrollListener(object : RecyclerViewPagination(manager) {
                 override fun onLoadMore(page: Long, totalItemsCount: Int, view: RecyclerView) {
                     getPostComments(page)
                 }
@@ -310,7 +325,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
             })
 
         }
-        commentAdapter.addItems(parentComments)
+        commentAdapter.addManyItems(parentComments)
     }
 
     private fun getChildComments(
@@ -357,9 +372,10 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         frameLayoutTAG.layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT
         val hashTag = "#${categoryResponse?.name}"
         textView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, UtilFun.getTextSize())
         textView.text = hashTag
         view.setOnClickListener {
-//            BottomSheetItems.getInstance(categoryResponse?.id!!, Utilities.ITEM_TAG)
+            //            BottomSheetItems.getInstance(categoryResponse?.id!!, Utilities.ITEM_TAG)
 //                .show(supportFragmentManager, "Tag")
         }
         flowLayoutTags.addView(categoryView)
@@ -371,8 +387,9 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
         val categoryView = layoutInflater.inflate(R.layout.category_item, view, false)
         val textView = categoryView.findViewById<TextView>(R.id.tag_txt)
         textView.text = categoryResponse?.name!!
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, UtilFun.getTextSize())
         view.setOnClickListener {
-//            BottomSheetItems.getInstance(categoryResponse.id!!, Utilities.ITEM_CATEGORY)
+            //            BottomSheetItems.getInstance(categoryResponse.id!!, Utilities.ITEM_CATEGORY)
 //                .show(supportFragmentManager, "Cat")
         }
         flowLayoutCategory.addView(categoryView)
@@ -396,6 +413,17 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger {
                 linearLayoutError.visibility = View.GONE
                 linearLayoutPost.visibility = View.VISIBLE
             }
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key?.equals(getString(R.string.theme_color))!! || key == getString(R.string.text_scaling) ||
+            key == getString(R.string.line_spacing)
+        ) {
+            recreate()
+        }else if (key==getString(R.string.app_sites)||key == getString(R.string.input_site)
+            ||key == getString(R.string.use_custom_site)){
+            finish()
         }
     }
 }

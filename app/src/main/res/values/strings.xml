@@ -47,4 +47,8 @@
     <string name="pick_color">Theme your App</string>
     <string name="theme_color">theme_color</string>
     <string name="text_scaling">text_scaling</string>
+    <string name="line_spacing">line_spacing</string>
+    <string name="app_sites">app_site</string>
+    <string name="input_site">app_input_site</string>
+    <string name="use_custom_site">use_custom_site</string>
 </resources>

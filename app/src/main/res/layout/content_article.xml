@@ -109,6 +109,7 @@
                     android:textAlignment="center"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="18sp"
+                    android:gravity="center"
                     app:layout_constraintStart_toEndOf="@id/textViewAuthor"
                     app:layout_constraintTop_toBottomOf="@id/flowLayoutCategory" />
 
@@ -151,6 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tags"
+                    android:id="@+id/textViewTags"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -184,6 +186,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textViewComments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/comments"

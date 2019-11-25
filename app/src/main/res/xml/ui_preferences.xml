@@ -10,6 +10,16 @@
             app:key="@string/text_scaling"
             app:title="Text Size"
             app:summary="Article text size"
+            app:defaultValue="3"
+            android:max="10"
+            app:min="1"
+            app:showSeekBarValue="true"
+            />
+        <SeekBarPreference
+            app:iconSpaceReserved="false"
+            app:key="@string/line_spacing"
+            app:title="Line Spacing"
+            app:summary="Spacing between lines in an Article"
             app:defaultValue="1"
             android:max="10"
             app:min="1"

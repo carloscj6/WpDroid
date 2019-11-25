@@ -1,6 +1,5 @@
 package com.revosleap.wpdroid.ui.activities
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +10,7 @@ import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.utils.misc.PreferenceLoader
 import com.revosleap.wpdroid.utils.misc.Themer
 import kotlinx.android.synthetic.main.settings_activity.*
+import org.jetbrains.anko.startActivity
 
 private const val TITLE_TAG = "settingsActivityTitle"
 
@@ -24,7 +24,7 @@ class SettingsActivity : AppCompatActivity(),
         setContentView(R.layout.settings_activity)
         setSupportActionBar(settingsToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(true)
-       // theme.applyStyle(R.style.DefToolBar,true)
+        // theme.applyStyle(R.style.DefToolBar,true)
         PreferenceLoader(this)
 
         if (savedInstanceState == null) {
@@ -41,7 +41,7 @@ class SettingsActivity : AppCompatActivity(),
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val sharedPreference= PreferenceManager.getDefaultSharedPreferences(this)
+        val sharedPreference = PreferenceManager.getDefaultSharedPreferences(this)
         sharedPreference.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -81,29 +81,34 @@ class SettingsActivity : AppCompatActivity(),
     }
 
 
-
     class HeaderFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.header_preferences, rootKey)
         }
     }
 
-    class PostFetching:PreferenceFragmentCompat(){
+    class PostFetching : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.post_fetching_preference,rootKey)
+            setPreferencesFromResource(R.xml.post_fetching_preference, rootKey)
         }
 
     }
 
-    class UIAppearanceFragment:PreferenceFragmentCompat(){
+    class UIAppearanceFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.ui_preferences,rootKey)
+            setPreferencesFromResource(R.xml.ui_preferences, rootKey)
+        }
+    }
+
+    class WebFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.web_prefrences, rootKey)
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key?.equals(getString(R.string.theme_color))!!){
-         recreate()
+        if (key?.equals(getString(R.string.theme_color))!!) {
+            recreate()
         }
     }
 }
