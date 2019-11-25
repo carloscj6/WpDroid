@@ -1,5 +1,7 @@
 package com.revosleap.wpdroid.ui.recyclerview.itemViews
 
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,11 +39,11 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(), 
 
     class BlogItemView(itemView: View) : RecyclerView.ViewHolder(itemView), AnkoLogger {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewPost)
-        val title: HtmlTextView = itemView.findViewById(R.id.textViewPostTitle)
+        val title: TextView = itemView.findViewById(R.id.textViewPostTitle)
         val info: TextView = itemView.findViewById(R.id.textViewTimeInfo)
 
         fun bind(postResponse: PostResponse) {
-            title.setHtml(postResponse.title?.rendered!!)
+            val titleText=postResponse.title?.rendered!!
             getImage(postResponse.featuredMedia!!)
             itemView.setOnClickListener {
                 itemView.context.startActivity<ArticleActivity>(Utilities.BLOG_ID to postResponse.id)
@@ -50,6 +52,9 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(), 
             val sdfInput = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val date = sdfInput.parse(postResponse.dateGmt)
             info.text = sdf.format(date)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                title.text = Html.fromHtml(titleText, Html.FROM_HTML_MODE_COMPACT)
+            } else title.text = Html.fromHtml(titleText)
         }
 
         private fun getImage(id: Long) {
