@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:scrollbars="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.activities.ScrollingActivity"
-    tools:showIn="@layout/activity_scrolling">
+    tools:context=".ui.activities.ArticleActivity"
+    tools:showIn="@layout/activity_article">
 
     <FrameLayout
         android:layout_width="match_parent"
