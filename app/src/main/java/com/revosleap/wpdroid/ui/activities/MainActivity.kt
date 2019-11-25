@@ -28,7 +28,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.design.indefiniteSnackbar
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.warn
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity(),
     var wpDataService: GetWpDataService? = null
     val itemViewCategory = ItemViewCategory()
     lateinit var preferenceLoader: PreferenceLoader
+    private var currentPostPage: Long = 1L
+    private var currentCategoryPage: Long = 1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +113,7 @@ class MainActivity : AppCompatActivity(),
         wpDroidAdapter.clearItems()
         getPosts(1, categoryId)
 
+
     }
 
     private fun instantiateRecyclerView() {
@@ -135,6 +140,7 @@ class MainActivity : AppCompatActivity(),
 
 
     private fun getPosts(page: Long, categoryId: Long?) {
+        currentPostPage = page
         if (page == 1L) {
             updateUi(Utilities.LOADING)
         }
@@ -149,7 +155,35 @@ class MainActivity : AppCompatActivity(),
         call?.enqueue(object : Callback<List<PostResponse>> {
             override fun onFailure(call: Call<List<PostResponse>>, t: Throwable) {
                 warn("${call.request().url()} \n ${t.message}")
-                updateUi(Utilities.ERROR)
+
+                when {
+                    t.message == "timeout" -> {
+                        val sb = drawer_layout.indefiniteSnackbar("Network Timeout")
+                        sb.show()
+                        sb.setAction("Reload") {
+                            reload()
+                            sb.dismiss()
+                        }
+                    }
+                    t.message!!.contains("No address associated with hostname", true) -> {
+                        progressLoading.visibility = View.GONE
+                        val sb = drawer_layout.indefiniteSnackbar("Site not Found")
+                        sb.show()
+                        sb.setAction("Change Site") {
+                            startActivity<SettingsActivity>()
+                        }
+                    }
+                    t.message!!.contains("not verified:",true)->{
+                        progressLoading.visibility = View.GONE
+                        toast("Address may have www or not, please check")
+                        val sb = drawer_layout.indefiniteSnackbar("Change your address")
+                        sb.show()
+                        sb.setAction("Change") {
+                            startActivity<SettingsActivity>()
+                        }
+                    }
+                    else -> updateUi(Utilities.ERROR)
+                }
             }
 
             override fun onResponse(
@@ -206,6 +240,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getCategories(page: Long) {
+        currentCategoryPage = page
         val call = wpDataService?.getWpCategories(preferenceLoader.postLimit, page, true)
         call?.enqueue(object : Callback<List<CategoryResponse>> {
             override fun onFailure(call: Call<List<CategoryResponse>>, t: Throwable) {
@@ -251,15 +286,20 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    fun reload() {
+        getCategories(currentCategoryPage)
+        getPosts(currentPostPage, selectCategoryId)
+    }
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key?.equals(getString(R.string.theme_color))!!) {
             Themer(this).setTheme()
             recreate()
-        } else if (key == getString(R.string.app_sites)||key == getString(R.string.input_site)
-            ||key == getString(R.string.use_custom_site)) {
+        } else if (key == getString(R.string.app_sites) || key == getString(R.string.input_site)
+            || key == getString(R.string.use_custom_site)
+        ) {
 
-            getPosts(1, null)
-            getCategories(1)
+
         }
     }
 }

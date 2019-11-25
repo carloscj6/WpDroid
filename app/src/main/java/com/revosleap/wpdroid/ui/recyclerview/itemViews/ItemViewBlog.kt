@@ -65,7 +65,7 @@ class ItemViewBlog : ItemViewBinder<PostResponse, ItemViewBlog.BlogItemView>(), 
                     call: Call<MediaResponse>,
                     response: Response<MediaResponse>
                 ) {
-                    Picasso.with(itemView.context).load(response.body()?.sourceUrl)
+                    Picasso.get().load(response.body()?.sourceUrl)
                         .placeholder(R.drawable.blog_item_placeholder)
                         .into(imageView)
 

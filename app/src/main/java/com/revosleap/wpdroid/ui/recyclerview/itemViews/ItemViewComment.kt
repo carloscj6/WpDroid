@@ -36,7 +36,7 @@ class ItemViewComment : ItemViewBinder<ParentComment, ItemViewComment.CommentHol
         fun bind(commentResponse: ParentComment) {
             val comment = commentResponse.comment
             warn(commentResponse.comments?.size.toString())
-            Picasso.with(itemView.context).load(comment?.authorAvatarUrls?.x96)
+            Picasso.get().load(comment?.authorAvatarUrls?.x96)
                 .placeholder(R.drawable.author_placehoder).into(imageView)
             commentTextView?.setHtml(comment?.content?.rendered?.toString().toString())
             commentAuthor?.text = comment?.authorName

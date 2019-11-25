@@ -53,7 +53,7 @@ class AuthorActivity : AppCompatActivity(),AnkoLogger {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
                     val author = response.body()
-                    Picasso.with(this@AuthorActivity).load(author?.avatarUrls?.x96)
+                    Picasso.get().load(author?.avatarUrls?.x96)
                         .placeholder(R.drawable.author_placehoder)
                         .into(circleImageViewAuthor)
                     textViewName.setHtml(author?.name!!)

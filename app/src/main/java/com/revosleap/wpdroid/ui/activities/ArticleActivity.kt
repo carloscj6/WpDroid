@@ -1,5 +1,6 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -46,6 +47,7 @@ import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,10 +68,7 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         preferenceLoader = PreferenceLoader(this)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+
         wpDataService =
             RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         getPost()
@@ -148,9 +147,23 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
                 textViewPostDate.text = sdf.format(date)
                 getAuthor(post.author!!)
                 getPostComments(1)
+                sharePost(response.body()!!)
             }
 
         })
+    }
+
+    private fun sharePost(postResponse: PostResponse){
+        val shareIntent= Intent()
+        shareIntent.apply {
+            action= Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT,postResponse.link)
+            putExtra(Intent.EXTRA_SUBJECT,textViewTitle.text)
+            type = "text/plain"
+        }
+        fab.setOnClickListener { _ ->
+            startActivity(Intent.createChooser(shareIntent,"Share Post Via:"))
+        }
     }
 
     private fun getMedia(id: Long) {
@@ -170,9 +183,11 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
 
                     }
 
-                    override fun onBitmapFailed(errorDrawable: Drawable?) {
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
 
                     }
+
+
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         imageViewHeader.setImageBitmap(
@@ -184,8 +199,8 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
                         )
                     }
                 }
-                Picasso.with(this@ArticleActivity).load(response.body()?.sourceUrl)
-                    .into(target)
+                Picasso.get().load(response.body()?.sourceUrl).into(target)
+
 
             }
         })

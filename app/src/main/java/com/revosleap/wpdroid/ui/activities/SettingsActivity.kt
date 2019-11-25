@@ -1,12 +1,15 @@
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.WpDroid
 import com.revosleap.wpdroid.utils.misc.PreferenceLoader
 import com.revosleap.wpdroid.utils.misc.Themer
 import kotlinx.android.synthetic.main.settings_activity.*
@@ -107,8 +110,12 @@ class SettingsActivity : AppCompatActivity(),
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        val act= Intent(this,MainActivity::class.java)
         if (key?.equals(getString(R.string.theme_color))!!) {
             recreate()
+        }else if (key==getString(R.string.app_sites)||key == getString(R.string.input_site)){
+            ProcessPhoenix.triggerRebirth(this,act)
         }
+
     }
 }

@@ -29,7 +29,7 @@ class ItemVewChildComment:ItemViewBinder<CommentResponse,ItemVewChildComment.Ite
         private val commentAuthor= itemView.findViewById<TextView>(R.id.textViewCommentAuthor)
         private val commentDate= itemView.findViewById<TextView>(R.id.textViewCommentDate)
         fun bind(commentResponse: CommentResponse){
-            Picasso.with(itemView.context).load(commentResponse.authorAvatarUrls?.x96)
+            Picasso.get().load(commentResponse.authorAvatarUrls?.x96)
                 .placeholder(R.drawable.author_placehoder).into(imageView)
             commentTextView.setHtml(commentResponse.content?.rendered!!)
             commentAuthor.text= commentResponse.authorName
