@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="About"
+        app:iconSpaceReserved="false"
+        app:summary="About App">
+        <Preference
+            app:iconSpaceReserved="false"
+            android:title="Developer"
+            app:summary="Revosleap"/>
+        <Preference
+            app:iconSpaceReserved="false"
+            android:title="Version"
+           android:key="@string/app_version"/>
+        <Preference
+            app:iconSpaceReserved="false"
+            android:title="Developer Site"
+            app:key="@string/view_site"
+            app:summary="www.revosleap.com"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

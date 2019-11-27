@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/frame_layout_posts"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressLoading"
+        android:indeterminate="true"
+        android:layout_gravity="center"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerViewPosts"/>
+    <LinearLayout
+        android:visibility="gone"
+        android:gravity="center"
+        android:id="@+id/linearLayoutOops"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@string/app_name"
+            android:tint="@android:color/darker_gray"
+            android:src="@drawable/ic_sentiment_dissatisfied"
+            android:id="@+id/imageViewOops"/>
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:layout_height="wrap_content"
+            android:text="Oops! Something Unexpected Happened"
+            android:id="@+id/textViewOops"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:text="@string/retry"
+            android:background="@drawable/error_button_bg"
+            android:id="@+id/buttonRetry"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            />
+
+    </LinearLayout>
+</FrameLayout>

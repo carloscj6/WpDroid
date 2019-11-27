@@ -13,13 +13,17 @@
         app:fragment="com.revosleap.wpdroid.ui.activities.SettingsActivity$UIAppearanceFragment"
         app:icon="@drawable/ic_appearance"
         app:summary="App look and feel"
-        app:key="app_appearance"
         app:title="Appearance"/>
     <Preference
         app:fragment="com.revosleap.wpdroid.ui.activities.SettingsActivity$WebFragment"
         app:icon="@drawable/ic_web"
         app:summary="App sites"
-        app:key="app_appearance"
         app:title="Sites"/>
+    <Preference
+        app:fragment="com.revosleap.wpdroid.ui.activities.SettingsActivity$InfoFragment"
+        app:icon="@drawable/ic_info"
+        app:title="App Info"
+        app:summary="About App"
+       />
 
 </PreferenceScreen>

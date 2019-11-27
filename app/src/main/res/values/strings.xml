@@ -51,4 +51,6 @@
     <string name="app_sites">app_site</string>
     <string name="input_site">app_input_site</string>
     <string name="use_custom_site">use_custom_site</string>
+    <string name="app_version">app_version_name</string>
+    <string name="view_site">view_site</string>
 </resources>

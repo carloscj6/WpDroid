@@ -43,7 +43,7 @@ class ItemViewCategory : ItemViewBinder<CategoryResponse, ItemViewCategory.Categ
             } else categoryText.text = Html.fromHtml(category)
 
             itemView.setOnClickListener {
-                categorySelection?.onCategorySelected(categoryResponse.id!!)
+                categorySelection?.onCategorySelected(categoryResponse.id!!,categoryText.text.toString())
             }
 
         }
