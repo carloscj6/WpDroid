@@ -2,26 +2,25 @@ package com.revosleap.wpdroid
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.app.ActivityCompat.recreate
-import androidx.preference.PreferenceManager
-import com.revosleap.wpdroid.ui.activities.SettingsActivity
-import com.revosleap.wpdroid.utils.misc.PreferenceLoader
+import com.revosleap.wpdroid.utils.misc.ObjectBox
 import com.revosleap.wpdroid.utils.misc.Themer
+import com.revosleap.wpdroid.utils.misc.Websites
 
-class WpDroid :Application(){
+class WpDroid : Application() {
     override fun onCreate() {
         super.onCreate()
-        instance= this
+        instance = this
         Themer(this).setTheme()
-
+        ObjectBox.init(this)
+        Websites.addDefaultCategories()
+        Websites.addDefaultSites()
     }
 
-    companion object{
-        var instance:WpDroid?= null
-        private set
+    companion object {
+        var instance: WpDroid? = null
+            private set
 
-        val context:Context?
-        get() = instance
+        val context: Context?
+            get() = instance
     }
 }

@@ -119,7 +119,7 @@ class FragmentPosts : Fragment(), AnkoLogger {
                         }
                     }
                     t.message!!.contains("No address associated with hostname", true) -> {
-                        progressLoading.visibility = View.GONE
+                        progressLoading?.visibility = View.GONE
                         val sb = frame_layout_posts?.indefiniteSnackbar("Site not Found")
                         sb?.show()
                         sb?.setAction("Change Site") {
@@ -127,7 +127,7 @@ class FragmentPosts : Fragment(), AnkoLogger {
                         }
                     }
                     t.message!!.contains("not verified:", true) -> {
-                        progressLoading.visibility = View.GONE
+                        progressLoading?.visibility = View.GONE
                         mainActivity?.toast("Address may have www or not, please check")
                         val sb = frame_layout_posts.indefiniteSnackbar("Change your address")
                         sb.show()
@@ -154,16 +154,16 @@ class FragmentPosts : Fragment(), AnkoLogger {
                     } else {
                         if (page == 1L) {
                             updateUi(Utilities.ERROR)
-                            textViewOops.text = "Request is Successful but no post was found!!"
+                            textViewOops?.text = "Request is Successful but no post was found!!"
                         }
 
                     }
                 } else {
                     if (page == 1L) {
-                        textViewOops.text =
+                        textViewOops?.text =
                             "Request is Successful but there seems to be problem with getting posts"
                         updateUi(Utilities.ERROR)
-                        buttonRetry.visibility = View.GONE
+                        buttonRetry?.visibility = View.GONE
                     }
 
                 }
