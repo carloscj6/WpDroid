@@ -1,4 +1,4 @@
-package com.revosleap.wpdroid.ui.dialogs
+package com.revosleap.wpdroid.ui.fragments
 
 import android.content.Context
 import android.os.Bundle

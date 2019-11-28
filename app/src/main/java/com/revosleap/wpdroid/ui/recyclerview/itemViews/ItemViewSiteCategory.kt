@@ -10,10 +10,10 @@ import com.drakeet.multitype.ItemViewBinder
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.models.misc.SiteCategory
-import com.revosleap.wpdroid.ui.recyclerview.models.misc.Website
 import com.revosleap.wpdroid.utils.misc.ObjectBox
+import com.revosleap.wpdroid.utils.misc.Websites
 
-class ItemViewSiteCategory :
+class ItemViewSiteCategory() :
     ItemViewBinder<SiteCategory, ItemViewSiteCategory.ItemViewSiteCatHolder>() {
 
 
@@ -25,15 +25,8 @@ class ItemViewSiteCategory :
             siteAdapter.register(ItemViewSiteName())
 
             itemText.text = string.categoryTitle
-            val sites = mutableListOf<Website>()
-
-            ObjectBox.websitesBox.all.forEach {
-                if (it.category == string) {
-                    sites.add(it)
-                }
-            }
-
-            siteAdapter.addItems(sites)
+            val site = Websites.siteCategoryBox.get(string.id)
+            siteAdapter.addItems(site.sites)
             recyclerView.apply {
                 adapter = siteAdapter
                 layoutManager = GridLayoutManager(itemView.context, 2)

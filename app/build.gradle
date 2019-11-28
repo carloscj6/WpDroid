@@ -6,7 +6,7 @@ apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion 29
-//    buildToolsVersion "29.0.2"
+   //buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.revosleap.wpdroid"
         minSdkVersion 21
@@ -15,7 +15,11 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
 
+    }
 
     buildTypes {
         release {

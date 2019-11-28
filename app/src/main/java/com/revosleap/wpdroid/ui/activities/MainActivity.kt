@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.revosleap.wpdroid.R
+import com.revosleap.wpdroid.ui.dialogs.DialogNewSite
 import com.revosleap.wpdroid.ui.fragments.FragmentPosts
 import com.revosleap.wpdroid.ui.recyclerview.components.RecyclerViewPagination
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Themer(this).setTheme()
+        Websites.addDefaultSites()
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         behaviour = BottomSheetBehavior.from(bottomSheetLayout)
@@ -120,7 +122,10 @@ class MainActivity : AppCompatActivity(),
             layoutManager = LinearLayoutManager(this@MainActivity)
             hasFixedSize()
         }
-        siteCatAdapter.addItems(ObjectBox.siteCategoryBox.all)
+        siteCatAdapter.addItems(Websites.siteCategoryBox.all)
+        imageButtonAddSite?.setOnClickListener {
+            DialogNewSite().show(supportFragmentManager,null)
+        }
 
     }
 

@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:4347275421941998172",
-      "lastPropertyId": "4:6006826844070565595",
+      "lastPropertyId": "5:5529002372162101063",
       "name": "Website",
       "properties": [
         {
@@ -25,9 +25,12 @@
           "type": 9
         },
         {
-          "id": "4:6006826844070565595",
-          "name": "category",
-          "type": 9
+          "id": "5:5529002372162101063",
+          "name": "siteCategoryId",
+          "indexId": "1:4321645977267643661",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "SiteCategory"
         }
       ],
       "relations": []
@@ -53,14 +56,16 @@
     }
   ],
   "lastEntityId": "2:5611485623154623514",
-  "lastIndexId": "0:0",
+  "lastIndexId": "1:4321645977267643661",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    6006826844070565595
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

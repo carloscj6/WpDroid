@@ -12,9 +12,9 @@ class WpDroid : Application() {
         instance = this
         Themer(this).setTheme()
         ObjectBox.init(this)
-        Websites.addDefaultCategories()
-        Websites.addDefaultSites()
+
     }
+
 
     companion object {
         var instance: WpDroid? = null

@@ -17,6 +17,4 @@ object ObjectBox {
             .build()
     }
 
-    val websitesBox: Box<Website> = boxStore.boxFor(Website::class.java)
-    val siteCategoryBox: Box<SiteCategory> = boxStore.boxFor(SiteCategory::class.java)
 }
