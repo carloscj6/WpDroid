@@ -41,7 +41,7 @@
         android:text="@string/new_site_summary"
         android:id="@+id/texViewSummary"
         android:alpha=".6"
-        android:textSize="10sp"
+        android:textSize="12sp"
         tools:ignore="SmallSp" />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutSiteName"
@@ -55,6 +55,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
+            android:inputType="textCapWords"
             android:maxLines="1"
             android:minEms="8"
             android:layout_height="wrap_content"
@@ -91,8 +92,37 @@
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_add"
+        app:layout_constraintTop_toTopOf="@id/spinnerCategory"
+        app:layout_constraintBottom_toBottomOf="@id/spinnerCategory"
+        app:layout_constraintStart_toEndOf="@id/spinnerCategory"
+        android:contentDescription="@string/app_name"
+        android:id="@+id/imageButtonNewCategory"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:visibility="gone"
+        android:id="@+id/textInputLayoutNewCategory"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerCategory"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            android:layout_width="match_parent"
+            android:minEms="8"
+            android:layout_height="wrap_content"
+            android:hint="@string/new_site_category" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutNewCategory"
         app:layout_constraintStart_toStartOf="parent"
         android:contentDescription="@string/app_name"
         android:layout_marginTop="8dp"
@@ -101,7 +131,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_check"
-        app:layout_constraintTop_toBottomOf="@id/spinnerCategory"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayoutNewCategory"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/app_name"
         android:layout_marginTop="8dp"

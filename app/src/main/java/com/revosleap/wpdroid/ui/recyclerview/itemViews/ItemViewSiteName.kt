@@ -24,9 +24,11 @@ class ItemViewSiteName : ItemViewBinder<Website, ItemViewSiteName.SiteViewHolder
 
     class SiteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val name: TextView = itemView.findViewById(R.id.textViewSiteName)
+        private val siteUrl:TextView= itemView.findViewById(R.id.textViewSiteUrl)
 
         fun bind(website: Website) {
             name.text = website.site
+            siteUrl.text= website.url
         }
     }
 
