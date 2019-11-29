@@ -65,9 +65,10 @@
     <string name="app_version">app_version_name</string>
     <string name="view_site">view_site</string>
     <string name="new_site">Adding New Site</string>
-    <string name="new_site_summary">When adding new site be sure to look at the site domain if it starts with
-    www or not. example: www.revosleap.com can work while revosleap.com may not. Sometimes both can work. \n
+    <string name="new_site_summary">When adding new site be sure to look at the site domain whether it starts with
+    www or not. Example: www.revosleap.com can work while revosleap.com may not. Sometimes both can work.\n
     Some sites may lack SSL encryption and may not load, go to settings and turn encryption off.</string>
     <string name="website">Website</string>
     <string name="website_name">Website Name</string>
+    <string name="new_site_category">New site category</string>
 </resources>
