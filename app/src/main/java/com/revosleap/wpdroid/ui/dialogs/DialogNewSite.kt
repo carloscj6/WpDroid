@@ -14,19 +14,26 @@ package com.revosleap.wpdroid.ui.dialogs
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.models.misc.SiteCategory
+import com.revosleap.wpdroid.ui.recyclerview.models.misc.SiteCategory_
 import com.revosleap.wpdroid.ui.recyclerview.models.misc.Website
 import com.revosleap.wpdroid.ui.recyclerview.models.misc.Website_
 import com.revosleap.wpdroid.utils.misc.Websites
 import kotlinx.android.synthetic.main.new_site_layout.*
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.warn
+import java.util.*
 
-class DialogNewSite : DialogFragment() {
+class DialogNewSite : DialogFragment(), AnkoLogger {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +60,7 @@ class DialogNewSite : DialogFragment() {
 
     private fun instantiateViews() {
         var category = Websites.uncategorized
-
+        imageButtonNewCategory?.setImageResource(R.drawable.ic_add)
         imageButtonCancel?.setOnClickListener {
             dismiss()
         }
@@ -79,9 +86,30 @@ class DialogNewSite : DialogFragment() {
         imageButtonCheck?.setOnClickListener {
             if (isWorking()) {
                 val website = Website(0, getName()!!, getText()!!)
-                website.siteCategory.target = category
+                website.siteCategory.target = getCategory(category.categoryTitle!!)
                 Websites.websitesBox.put(website)
                 context?.toast("Site Saved Successfully!!")
+                dismiss()
+            }
+        }
+
+        imageButtonNewCategory?.setOnClickListener {
+            textInputLayoutNewCategory.visibility = View.VISIBLE
+            imageButtonNewCategory?.setImageResource(R.drawable.ic_check)
+            saveCategory()
+        }
+    }
+
+    private fun saveCategory() {
+        imageButtonNewCategory?.setOnClickListener {
+            if (canCategoryBeSaved()) {
+                val cat = textInputLayoutNewCategory?.editText?.text?.toString()?.trim()!!
+                cat.substring(0, 1).toUpperCase(Locale.getDefault()) + cat.substring(1)
+                val siteCategory = SiteCategory(0, cat)
+                Websites.siteCategoryBox.put(siteCategory)
+                context?.toast("$cat Saved!!")
+                textInputLayoutNewCategory?.visibility = View.GONE
+                instantiateViews()
             }
         }
     }
@@ -98,36 +126,76 @@ class DialogNewSite : DialogFragment() {
                 null
             }
             else -> {
-                text.trim()
+                text.trim().toLowerCase(Locale.getDefault())
             }
         }
     }
 
     private fun getName(): String? {
         val text = textInputLayoutSiteName?.editText?.text?.toString()
+
         return when {
             text.isNullOrEmpty() -> {
-                textInputLayoutSite?.error = "Site Name Must Not Be Empty"
+                textInputLayoutSiteName?.error = "Site Name Must Not Be Empty"
                 null
             }
 
             else -> {
                 text.trim()
+                text.substring(0, 1).toUpperCase(Locale.getDefault()) + text.substring(1)
             }
         }
     }
 
     private fun isWorking(): Boolean {
-        if (isSiteSaved()) {
+        return if (isSiteSaved()) {
             context?.toast("Site already Saved")
-            return false
-        } else return getName() != null && getText() != null
+            false
+        } else getName() != null && getText() != null
     }
 
     private fun isSiteSaved(): Boolean {
         val queryBuilder = Websites.websitesBox.query()
-        queryBuilder.equal(Website_.url, textInputLayoutSite?.editText?.text?.toString()!!)
+        val url =
+            textInputLayoutSite?.editText?.text?.toString()?.trim()?.toLowerCase(Locale.getDefault())!!
+        queryBuilder.equal(Website_.url, url)
+        val items = queryBuilder.build().find()
+        warn(items.size)
+        return items.size > 0
+    }
+
+    private fun getCategory(name: String): SiteCategory {
+        val queryBuilder = Websites.siteCategoryBox.query()
+        queryBuilder.equal(SiteCategory_.categoryTitle, name)
+        val items = queryBuilder.build().find()
+        return items[0]
+    }
+
+    private fun canCategoryBeSaved(): Boolean {
+        val category = textInputLayoutNewCategory?.editText?.text?.toString()
+        return when {
+            category.isNullOrEmpty() -> {
+                textInputLayoutNewCategory?.error = "Type the new Category"
+                false
+            }
+            isCategorySaved() -> {
+                textInputLayoutNewCategory?.error = "Category Already Saved!!"
+                context?.toast("Category Already Saved!!")
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun isCategorySaved(): Boolean {
+        val category = textInputLayoutNewCategory?.editText?.text?.toString()!!
+        category.trim()
+        val queryBuilder = Websites.siteCategoryBox.query()
+        category.substring(0, 1).toUpperCase(Locale.getDefault()) + category.substring(1)
+        queryBuilder.equal(SiteCategory_.categoryTitle, category.trim())
         val items = queryBuilder.build().find()
         return items.size > 0
     }
+
 }
+
