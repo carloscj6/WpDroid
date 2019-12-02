@@ -17,7 +17,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -57,7 +59,6 @@ import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -126,8 +127,12 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
         textViewComments.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 4)
         textViewTags.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize + 4)
         textViewCommentError.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize - 2)
-        textViewPost.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-            preferenceLoader.lineSpacing.toFloat(),resources.displayMetrics),1f)
+        textViewPost.setLineSpacing(
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                preferenceLoader.lineSpacing.toFloat(), resources.displayMetrics
+            ), 1f
+        )
     }
 
     private fun getPost() {
@@ -163,16 +168,16 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
         })
     }
 
-    private fun sharePost(postResponse: PostResponse){
-        val shareIntent= Intent()
+    private fun sharePost(postResponse: PostResponse) {
+        val shareIntent = Intent()
         shareIntent.apply {
-            action= Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT,postResponse.link)
-            putExtra(Intent.EXTRA_SUBJECT,textViewTitle.text)
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, postResponse.link)
+            putExtra(Intent.EXTRA_SUBJECT, textViewTitle.text)
             type = "text/plain"
         }
         fab.setOnClickListener { _ ->
-            startActivity(Intent.createChooser(shareIntent,"Share Post Via:"))
+            startActivity(Intent.createChooser(shareIntent, "Share Post Via:"))
         }
     }
 
@@ -196,7 +201,6 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
                     override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
 
                     }
-
 
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
@@ -398,11 +402,16 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
         val hashTag = "#${tagResponse?.name}"
         textView.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, UtilFun.getTextSize())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            textView.text = Html.fromHtml(hashTag, Html.FROM_HTML_MODE_COMPACT)
+        } else textView.text = Html.fromHtml(hashTag)
         textView.text = hashTag
         categoryView.setOnClickListener {
-            startActivity<TagActivity>(Utilities.ITEM_ID_BUNDLE to tagResponse!!.id,
-                    Utilities.ITEM_TYPE_BUNDLE to Utilities.ITEM_TAG,
-                    Utilities.ITEM_TITLE_BUNDLE to tagResponse.name)
+            startActivity<TagActivity>(
+                Utilities.ITEM_ID_BUNDLE to tagResponse!!.id,
+                Utilities.ITEM_TYPE_BUNDLE to Utilities.ITEM_TAG,
+                Utilities.ITEM_TITLE_BUNDLE to tagResponse.name
+            )
         }
         flowLayoutTags.addView(categoryView)
     }
@@ -411,14 +420,18 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
         val view = findViewById<View>(android.R.id.content) as ViewGroup
         val categoryView = layoutInflater.inflate(R.layout.category_item, view, false)
         val textView = categoryView.findViewById<TextView>(R.id.tag_txt)
-        textView.text = categoryResponse?.name!!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            textView.text = Html.fromHtml(categoryResponse?.name!!, Html.FROM_HTML_MODE_COMPACT)
+        } else textView.text = Html.fromHtml(categoryResponse?.name!!)
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, UtilFun.getTextSize())
         categoryView.setOnClickListener {
-            startActivity<TagActivity>(Utilities.ITEM_ID_BUNDLE to categoryResponse.id,
+            startActivity<TagActivity>(
+                Utilities.ITEM_ID_BUNDLE to categoryResponse.id,
                 Utilities.ITEM_TYPE_BUNDLE to Utilities.ITEM_CATEGORY,
-                Utilities.ITEM_TITLE_BUNDLE to categoryResponse.name)
+                Utilities.ITEM_TITLE_BUNDLE to categoryResponse.name
+            )
 
-    }
+        }
         flowLayoutCategory.addView(categoryView)
     }
 
@@ -448,8 +461,9 @@ class ArticleActivity : AppCompatActivity(), AnkoLogger,
             key == getString(R.string.line_spacing)
         ) {
             recreate()
-        }else if (key==getString(R.string.app_sites)||key == getString(R.string.input_site)
-            ||key == getString(R.string.use_custom_site)){
+        } else if (key == getString(R.string.app_sites) || key == getString(R.string.input_site)
+            || key == getString(R.string.use_custom_site)
+        ) {
             finish()
         }
     }

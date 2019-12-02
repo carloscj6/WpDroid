@@ -18,6 +18,9 @@ import org.jetbrains.anko.warn
 
 class WpDroidAdapter : MultiTypeAdapter(),AnkoLogger {
     private val adapterItems = items.toMutableList()
+    var selectionModeActive= false
+
+
 
     fun addItems(itemList: List<Any>) {
         adapterItems.addAll(itemList)

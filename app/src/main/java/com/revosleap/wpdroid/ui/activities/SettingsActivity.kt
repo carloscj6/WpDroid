@@ -114,11 +114,7 @@ class SettingsActivity : AppCompatActivity(),
         }
     }
 
-    class WebFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.web_prefrences, rootKey)
-        }
-    }
+
 
     class InfoFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -139,9 +135,6 @@ class SettingsActivity : AppCompatActivity(),
         val act = Intent(this, MainActivity::class.java)
         if (key?.equals(getString(R.string.theme_color))!!) {
             recreate()
-        } else if (key == getString(R.string.app_sites) || key == getString(R.string.input_site)) {
-            ProcessPhoenix.triggerRebirth(this, act)
         }
-
     }
 }

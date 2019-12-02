@@ -80,4 +80,5 @@ object UtilFun {
             "https://${url}/wp-json/wp/v2/"
         }else "http://${url}/wp-json/wp/v2/"
     }
+
 }

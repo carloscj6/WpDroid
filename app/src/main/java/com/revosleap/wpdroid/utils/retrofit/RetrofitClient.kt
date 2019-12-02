@@ -18,13 +18,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     private var retrofit: Retrofit? = null
+
+    var baseUrl = UtilFun.getUrlBaseUrl()
+    private var builder = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl(baseUrl)
+
+    fun changeApiBaseUrl(newApiBaseUrl: String) {
+        baseUrl = newApiBaseUrl
+        builder = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(baseUrl)
+
+    }
+
     fun getRetrofitInstance(): Retrofit? {
-        if (retrofit == null) {
-            retrofit = Retrofit.Builder()
-                .baseUrl(UtilFun.getUrlBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
-        return retrofit
+        return builder.build()
     }
 }

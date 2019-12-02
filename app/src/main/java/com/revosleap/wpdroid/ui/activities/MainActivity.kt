@@ -11,12 +11,12 @@
 
 package com.revosleap.wpdroid.ui.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -24,6 +24,7 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.dialogs.DialogNewSite
 import com.revosleap.wpdroid.ui.fragments.FragmentPosts
@@ -32,10 +33,12 @@ import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewCategory
 import com.revosleap.wpdroid.ui.recyclerview.itemViews.ItemViewSiteCategory
 import com.revosleap.wpdroid.ui.recyclerview.models.category.CategoryResponse
+import com.revosleap.wpdroid.ui.recyclerview.models.misc.Website
 import com.revosleap.wpdroid.utils.callbacks.CategorySelection
-import com.revosleap.wpdroid.utils.misc.ObjectBox
+import com.revosleap.wpdroid.utils.callbacks.ItemSelected
 import com.revosleap.wpdroid.utils.misc.PreferenceLoader
 import com.revosleap.wpdroid.utils.misc.Themer
+import com.revosleap.wpdroid.utils.misc.UtilFun
 import com.revosleap.wpdroid.utils.misc.Websites
 import com.revosleap.wpdroid.utils.retrofit.GetWpDataService
 import com.revosleap.wpdroid.utils.retrofit.RetrofitClient
@@ -44,18 +47,22 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.sites_layout.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.warn
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity(),
-    AnkoLogger, CategorySelection, SharedPreferences.OnSharedPreferenceChangeListener {
+    AnkoLogger, CategorySelection, SharedPreferences.OnSharedPreferenceChangeListener,
+    ItemSelected {
     private var selectCategoryId: Long? = null
     private var siteCatAdapter = WpDroidAdapter()
     private val categoryAdapter = WpDroidAdapter()
     private var toggle: ActionBarDrawerToggle? = null
     var wpDataService: GetWpDataService? = null
     val itemViewCategory = ItemViewCategory()
+    private val itemViewSiteCategory = ItemViewSiteCategory()
     lateinit var preferenceLoader: PreferenceLoader
     private var currentPostPage: Long = 1L
     private var currentCategoryPage: Long = 1L
@@ -67,11 +74,11 @@ class MainActivity : AppCompatActivity(),
         Websites.addDefaultSites()
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        loadDefaultPreferences()
         behaviour = BottomSheetBehavior.from(bottomSheetLayout)
         categoryAdapter.register(itemViewCategory)
         preferenceLoader = PreferenceLoader(this)
-        wpDataService =
-            RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
+
         loadUI()
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
@@ -113,6 +120,8 @@ class MainActivity : AppCompatActivity(),
 
 
     private fun loadUI() {
+        wpDataService =
+            RetrofitClient.getRetrofitInstance()?.create(GetWpDataService::class.java)
         itemViewCategory.setCategorySelection(this)
         toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open
@@ -123,19 +132,21 @@ class MainActivity : AppCompatActivity(),
         toggle?.syncState()
         instantiateCategoryRecyclerView()
         getCategories(1)
+        categoryAdapter.clearItems()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.frame_layout_main, FragmentPosts.getInstance(null, null))
             .commit()
-        siteCatAdapter.register(ItemViewSiteCategory())
+        itemViewSiteCategory.setItemSelectedListener(this)
+        siteCatAdapter.register(itemViewSiteCategory)
         recyclerViewSites.apply {
             adapter = siteCatAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
             hasFixedSize()
         }
-        siteCatAdapter.addItems(Websites.siteCategoryBox.all)
+        siteCatAdapter.addManyItems(Websites.siteCategoryBox.all)
         imageButtonAddSite?.setOnClickListener {
-            DialogNewSite().show(supportFragmentManager,null)
+            DialogNewSite().show(supportFragmentManager, null)
         }
 
     }
@@ -176,13 +187,14 @@ class MainActivity : AppCompatActivity(),
         val call = wpDataService?.getWpCategories(preferenceLoader.postLimit, page, true)
         call?.enqueue(object : Callback<List<CategoryResponse>> {
             override fun onFailure(call: Call<List<CategoryResponse>>, t: Throwable) {
-
+                warn("${call.request().url()} \n Error ${t.message}")
             }
 
             override fun onResponse(
                 call: Call<List<CategoryResponse>>,
                 response: Response<List<CategoryResponse>>
             ) {
+                warn("${call.request().url()}")
                 if (response.body() != null && response.body()?.size!! > 0) {
                     progressBarCategories.visibility = View.GONE
                     recyclerViewCategories.visibility = View.VISIBLE
@@ -194,6 +206,11 @@ class MainActivity : AppCompatActivity(),
         })
     }
 
+    private fun loadDefaultPreferences(){
+        PreferenceManager.setDefaultValues(this,R.xml.post_fetching_preference,false)
+        PreferenceManager.setDefaultValues(this,R.xml.ui_preferences,false)
+
+    }
 
     fun reload() {
         getCategories(currentCategoryPage)
@@ -204,11 +221,19 @@ class MainActivity : AppCompatActivity(),
         if (key?.equals(getString(R.string.theme_color))!!) {
             Themer(this).setTheme()
             recreate()
-        } else if (key == getString(R.string.app_sites) || key == getString(R.string.input_site)
-            || key == getString(R.string.use_custom_site)
-        ) {
-
-
+        } else if (key == getString(R.string.app_sites)) {
+            preferenceLoader= PreferenceLoader(this)
+            RetrofitClient.changeApiBaseUrl(UtilFun.getUrlBaseUrl())
+//            toast("${preferenceLoader.url}")
+//            finish()
+//            startActivity(intent)
+            categoryAdapter.clearItems()
+            loadUI()
         }
     }
+
+    override fun onSelectItems(site: Website?) {
+        preferenceLoader.url = site?.url
+    }
+
 }

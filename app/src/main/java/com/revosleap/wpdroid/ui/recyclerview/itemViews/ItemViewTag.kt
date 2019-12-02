@@ -12,6 +12,8 @@
 package com.revosleap.wpdroid.ui.recyclerview.itemViews
 
 import android.graphics.Paint
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +50,10 @@ class ItemViewTag : ItemViewBinder<TagResponse, ItemViewTag.TagItemView>() {
             itemView.setOnClickListener {
                 tagSelected?.onTagSelected(tagResponse)
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                tagText.text = Html.fromHtml(hashTag, Html.FROM_HTML_MODE_COMPACT)
+            } else tagText.text = Html.fromHtml(hashTag)
+
         }
     }
 }

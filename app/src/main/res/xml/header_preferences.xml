@@ -25,11 +25,7 @@
         app:icon="@drawable/ic_appearance"
         app:summary="App look and feel"
         app:title="Appearance"/>
-    <Preference
-        app:fragment="com.revosleap.wpdroid.ui.activities.SettingsActivity$WebFragment"
-        app:icon="@drawable/ic_web"
-        app:summary="App sites"
-        app:title="Sites"/>
+
     <Preference
         app:fragment="com.revosleap.wpdroid.ui.activities.SettingsActivity$InfoFragment"
         app:icon="@drawable/ic_info"

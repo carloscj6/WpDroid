@@ -14,12 +14,11 @@ package com.revosleap.wpdroid.ui.dialogs
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.models.misc.SiteCategory
@@ -60,7 +59,6 @@ class DialogNewSite : DialogFragment(), AnkoLogger {
 
     private fun instantiateViews() {
         var category = Websites.uncategorized
-        imageButtonNewCategory?.setImageResource(R.drawable.ic_add)
         imageButtonCancel?.setOnClickListener {
             dismiss()
         }
@@ -95,23 +93,31 @@ class DialogNewSite : DialogFragment(), AnkoLogger {
 
         imageButtonNewCategory?.setOnClickListener {
             textInputLayoutNewCategory.visibility = View.VISIBLE
-            imageButtonNewCategory?.setImageResource(R.drawable.ic_check)
-            saveCategory()
+
+        }
+        textInputLayoutNewCategory?.editText?.setOnEditorActionListener { p0, p1, keyEvent ->
+            var done = false
+            if (p1 == EditorInfo.IME_ACTION_DONE) {
+                saveCategory()
+                done = true
+            }
+            
+
+            done
         }
     }
 
     private fun saveCategory() {
-        imageButtonNewCategory?.setOnClickListener {
-            if (canCategoryBeSaved()) {
-                val cat = textInputLayoutNewCategory?.editText?.text?.toString()?.trim()!!
-                cat.substring(0, 1).toUpperCase(Locale.getDefault()) + cat.substring(1)
-                val siteCategory = SiteCategory(0, cat)
-                Websites.siteCategoryBox.put(siteCategory)
-                context?.toast("$cat Saved!!")
-                textInputLayoutNewCategory?.visibility = View.GONE
-                instantiateViews()
-            }
+        if (canCategoryBeSaved()) {
+            val cat = textInputLayoutNewCategory?.editText?.text?.toString()?.trim()!!
+            cat.substring(0, 1).toUpperCase(Locale.getDefault()) + cat.substring(1)
+            val siteCategory = SiteCategory(0, cat)
+            Websites.siteCategoryBox.put(siteCategory)
+            context?.toast("$cat Saved!!")
+            textInputLayoutNewCategory?.visibility = View.GONE
+            instantiateViews()
         }
+
     }
 
     private fun getText(): String? {

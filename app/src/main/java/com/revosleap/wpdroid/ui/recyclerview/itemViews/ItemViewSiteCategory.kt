@@ -21,20 +21,23 @@ import com.drakeet.multitype.ItemViewBinder
 import com.revosleap.wpdroid.R
 import com.revosleap.wpdroid.ui.recyclerview.components.WpDroidAdapter
 import com.revosleap.wpdroid.ui.recyclerview.models.misc.SiteCategory
+import com.revosleap.wpdroid.utils.callbacks.ItemSelected
 import com.revosleap.wpdroid.utils.misc.ObjectBox
 import com.revosleap.wpdroid.utils.misc.Websites
 
-class ItemViewSiteCategory() :
+class ItemViewSiteCategory :
     ItemViewBinder<SiteCategory, ItemViewSiteCategory.ItemViewSiteCatHolder>() {
-
+    private var itemSelected: ItemSelected? = null
+    private var wpDroidAdapter: WpDroidAdapter? = null
 
     inner class ItemViewSiteCatHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val itemText: TextView = itemView.findViewById(R.id.textViewSiteCategory)
         private val recyclerView: RecyclerView = itemView.findViewById(R.id.recyclerViewSites)
         private val siteAdapter = WpDroidAdapter()
+        private val itemViewSiteName= ItemViewSiteName()
         fun bind(string: SiteCategory) {
-            siteAdapter.register(ItemViewSiteName())
-
+            siteAdapter.register(itemViewSiteName)
+            itemViewSiteName.setItemSelectedListener(itemSelected!!)
             itemText.text = string.categoryTitle
             val site = Websites.siteCategoryBox.get(string.id)
             siteAdapter.addItems(site.sites)
@@ -45,8 +48,15 @@ class ItemViewSiteCategory() :
         }
     }
 
+    fun setItemSelectedListener(itemSelected: ItemSelected) {
+        this.itemSelected = itemSelected
+    }
+
+
     override fun onBindViewHolder(holder: ItemViewSiteCatHolder, item: SiteCategory) {
+        wpDroidAdapter = adapter as WpDroidAdapter
         holder.bind(item)
+
     }
 
     override fun onCreateViewHolder(
