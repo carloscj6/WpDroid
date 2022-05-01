@@ -4,7 +4,7 @@ Wordpress to android using wordpress API
 Android app using Wordpress api.
 Typically works on any Wordpress site with few or no tweaks.
 ## Status
-Still under construction
+Still under construction, Updates may be tickling slowly
 
 License
 -------
